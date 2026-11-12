@@ -81,6 +81,7 @@ updateFile('server/src/version.ts', () => {
     windows: { version: '${version}', buildNumber: ${buildNumber}, engine: 'Tauri 2 + WASAPI Loopback + cpal' },
     linux: { version: '${version}', buildNumber: ${buildNumber}, engine: 'Tauri 2 + PipeWire/PulseAudio + cpal' },
   },
+  downloads: ${JSON.stringify(manifest.downloads || {}, null, 2)},
 } as const;
 `;
 });
@@ -98,6 +99,7 @@ export const SUPPORTED_PLATFORMS = [
   { id: 'windows', name: 'Windows Desktop (WASAPI Loopback)', version: '${version}', status: 'synchronized' },
   { id: 'linux', name: 'Linux Desktop (PipeWire / PulseAudio)', version: '${version}', status: 'synchronized' },
 ] as const;
+export const DOWNLOADS_MANIFEST = ${JSON.stringify(manifest.downloads || {}, null, 2)} as const;
 `;
 });
 

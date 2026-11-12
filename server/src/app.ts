@@ -26,6 +26,11 @@ const MIME_TYPES: Record<string, string> = {
   '.png': 'image/png',
   '.ico': 'image/x-icon',
   '.wav': 'audio/wav',
+  '.apk': 'application/vnd.android.package-archive',
+  '.dmg': 'application/x-apple-diskimage',
+  '.exe': 'application/vnd.microsoft.portable-executable',
+  '.zip': 'application/zip',
+  '.appimage': 'application/x-executable',
 };
 
 export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch) {
@@ -253,6 +258,78 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
         return;
       }
 
+      // Releases Manifest
+      if (req.method === 'GET' && (path === '/api/v1/releases/latest' || path === '/api/v1/releases')) {
+        sendJson(res, 200, {
+          name: 'PlayIT',
+          version: RELEASE_MANIFEST.version,
+          buildNumber: RELEASE_MANIFEST.buildNumber,
+          releaseDate: RELEASE_MANIFEST.releaseDate,
+          channel: RELEASE_MANIFEST.channel,
+          officialUrl: 'https://playit.vercel.app/',
+          notes: RELEASE_MANIFEST.notes,
+          platforms: RELEASE_MANIFEST.platforms,
+          downloads: (RELEASE_MANIFEST as any).downloads ?? {},
+        });
+        return;
+      }
+
+      // Tauri v2 Auto-Updater Manifest Endpoint
+      if (req.method === 'GET' && path === '/api/v1/releases/manifest.json') {
+        const downloads = (RELEASE_MANIFEST as any).downloads ?? {};
+        sendJson(res, 200, {
+          version: RELEASE_MANIFEST.version,
+          notes: RELEASE_MANIFEST.notes,
+          pub_date: new Date(RELEASE_MANIFEST.releaseDate).toISOString(),
+          platforms: {
+            'darwin-aarch64': {
+              signature: '',
+              url: downloads.macos?.url ?? '/downloads/PlayIT-1.5.0-macOS.dmg',
+            },
+            'darwin-x86_64': {
+              signature: '',
+              url: downloads.macos?.url ?? '/downloads/PlayIT-1.5.0-macOS.dmg',
+            },
+            'windows-x86_64': {
+              signature: '',
+              url: downloads.windows?.url ?? '/downloads/PlayIT-Setup-1.5.0.exe',
+            },
+            'linux-x86_64': {
+              signature: '',
+              url: downloads.linux?.url ?? '/downloads/PlayIT-1.5.0-x86_64.AppImage',
+            },
+          },
+        });
+        return;
+      }
+
+      // Direct download route: /api/v1/download/:platform or /download/:platform
+      const downloadMatch = path.match(/^\/(?:api\/v1\/)?download\/([a-zA-Z0-9_-]+)/);
+      if (req.method === 'GET' && downloadMatch) {
+        const platformKey = downloadMatch[1].toLowerCase();
+        const downloads = (RELEASE_MANIFEST as any).downloads ?? {};
+        const entry = downloads[platformKey];
+        if (entry) {
+          if (entry.url) {
+            res.writeHead(302, {
+              Location: entry.url,
+              'Cache-Control': 'no-cache',
+            });
+            res.end();
+            return;
+          }
+          if (platformKey === 'ios') {
+            res.writeHead(302, {
+              Location: '/download?platform=ios',
+              'Cache-Control': 'no-cache',
+            });
+            res.end();
+            return;
+          }
+        }
+        throw new ApiError('NOT_FOUND', `Download artifact for platform '${platformKey}' not found.`);
+      }
+
       // 2. Song Recognition
       if (req.method === 'POST' && path === '/api/v1/recognize') {
         const user = getAuthUser(req);
@@ -457,6 +534,7 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
           const content = readFileSync(filePath);
           res.writeHead(200, {
             'Content-Type': MIME_TYPES[ext] ?? 'application/octet-stream',
+            'Content-Length': String(content.byteLength),
             'Cache-Control': ext === '.html' || ext === '.webmanifest' ? 'no-cache' : 'public, max-age=31536000, immutable',
           });
           res.end(req.method === 'HEAD' ? undefined : content);

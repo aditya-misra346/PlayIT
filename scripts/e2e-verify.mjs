@@ -60,6 +60,48 @@ async function verifyEndpoints(baseUrl, expectedVersion) {
     assert.equal(verJson.platforms[plat].version, expectedVersion, `Platform ${plat} version mismatch`);
   }
 
+  // 2b. Download Page, Release Manifests & Binary Download Endpoints
+  const dlPageRes = await fetch(`${baseUrl}/download`);
+  assert.equal(dlPageRes.status, 200, 'Expected HTTP 200 on /download');
+  const dlPageHtml = await dlPageRes.text();
+  assert.ok(dlPageHtml.includes('PlayIT'), 'Expected PlayIT in /download page HTML');
+
+  const relRes = await fetch(`${baseUrl}/api/v1/releases/latest`);
+  assert.equal(relRes.status, 200, 'Expected HTTP 200 on /api/v1/releases/latest');
+  const relJson = await relRes.json();
+  assert.equal(relJson.version, expectedVersion);
+  assert.ok(relJson.downloads.android && relJson.downloads.macos && relJson.downloads.windows && relJson.downloads.linux && relJson.downloads.ios);
+  console.log(`✔ Verified /api/v1/releases/latest manifest with all 5 platform release packages`);
+
+  const tauriManifestRes = await fetch(`${baseUrl}/api/v1/releases/manifest.json`);
+  assert.equal(tauriManifestRes.status, 200, 'Expected HTTP 200 on /api/v1/releases/manifest.json');
+  const tauriManifest = await tauriManifestRes.json();
+  assert.equal(tauriManifest.version, expectedVersion);
+  console.log(`✔ Verified /api/v1/releases/manifest.json for Tauri background auto-updater`);
+
+  // Verify static artifact downloads
+  const apkRes = await fetch(`${baseUrl}/downloads/playit-v1.5.0.apk`);
+  assert.equal(apkRes.status, 200, 'Expected HTTP 200 on /downloads/playit-v1.5.0.apk');
+  assert.equal(apkRes.headers.get('content-type'), 'application/vnd.android.package-archive');
+  const apkBuf = await apkRes.arrayBuffer();
+  assert.ok(apkBuf.byteLength > 18000000, `Expected APK > 18 MB, got ${apkBuf.byteLength} bytes`);
+  console.log(`✔ Verified static Android APK download: ${apkBuf.byteLength} bytes (HTTP 200, application/vnd.android.package-archive)`);
+
+  const dmgRes = await fetch(`${baseUrl}/downloads/PlayIT-1.5.0-macOS.dmg`);
+  assert.equal(dmgRes.status, 200, 'Expected HTTP 200 on /downloads/PlayIT-1.5.0-macOS.dmg');
+  assert.equal(dmgRes.headers.get('content-type'), 'application/x-apple-diskimage');
+  const dmgBuf = await dmgRes.arrayBuffer();
+  assert.ok(dmgBuf.byteLength > 3000000, `Expected DMG > 3 MB, got ${dmgBuf.byteLength} bytes`);
+  console.log(`✔ Verified static macOS DMG download: ${dmgBuf.byteLength} bytes (HTTP 200, application/x-apple-diskimage)`);
+
+  // Verify redirect endpoints
+  const dlAndroidRedirect = await fetch(`${baseUrl}/api/v1/download/android`, { redirect: 'manual' });
+  assert.ok(dlAndroidRedirect.status === 302 || dlAndroidRedirect.status === 200);
+  if (dlAndroidRedirect.status === 302) {
+    assert.ok(dlAndroidRedirect.headers.get('location')?.includes('playit-v1.5.0.apk'));
+  }
+  console.log(`✔ Verified /api/v1/download/android redirect to binary package`);
+
   // 3. /api/v1/config
   const cfgRes = await fetch(`${baseUrl}/api/v1/config`);
   assert.equal(cfgRes.status, 200);

@@ -19,6 +19,7 @@ android/keystore.properties
 *.jks
 *.keystore
 *.apk
+!web/public/downloads/*.apk
 *.aab
 
 # iOS / Swift build artifacts

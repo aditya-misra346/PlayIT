@@ -49,8 +49,9 @@ import type {
 } from './types';
 import { APP_BUILD_NUMBER, APP_VERSION, SUPPORTED_PLATFORMS } from './version';
 import { CreatorFooter } from './components/CreatorFooter';
+import { DownloadPage } from './components/DownloadPage';
 
-type ActiveTab = 'listen' | 'library' | 'studio' | 'settings';
+type ActiveTab = 'listen' | 'library' | 'studio' | 'settings' | 'download';
 type DateFilter = 'all' | 'today' | '7d' | '30d';
 type TestCondition = 'clean' | 'speaker' | 'noisy' | 'echo' | 'quiet';
 
@@ -112,8 +113,44 @@ const STATE_LABELS: Record<RecognitionState, { badge: string; title: string; sub
   },
 };
 
+function getInitialTab(): ActiveTab {
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    if (path.includes('download') || search.includes('download')) {
+      return 'download';
+    }
+  }
+  return 'listen';
+}
+
 export function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('listen');
+  const [activeTab, setActiveTab] = useState<ActiveTab>(getInitialTab);
+
+  const navigateToTab = useCallback((tab: ActiveTab) => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined' && window.history) {
+      if (tab === 'download') {
+        window.history.pushState(null, '', '/download');
+      } else if (window.location.pathname.includes('download')) {
+        window.history.pushState(null, '', '/');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (path.includes('download') || search.includes('download')) {
+        setActiveTab('download');
+      } else {
+        setActiveTab('listen');
+      }
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
   const [state, setState] = useState<RecognitionState>('idle');
   const [statusDetail, setStatusDetail] = useState<string | null>(null);
   const [clippingHint, setClippingHint] = useState<boolean>(false);
@@ -614,10 +651,10 @@ export function App() {
       <header className="topbar">
         <div
           className="brand-lockup"
-          onClick={() => setActiveTab('listen')}
+          onClick={() => navigateToTab('listen')}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && setActiveTab('listen')}
+          onKeyDown={(e) => e.key === 'Enter' && navigateToTab('listen')}
         >
           <svg className="brand-mark" viewBox="0 0 512 512" fill="none" aria-hidden="true">
             <rect width="512" height="512" rx="124" fill="#0B132B" />
@@ -647,14 +684,14 @@ export function App() {
           <button
             type="button"
             className={`nav-pill ${activeTab === 'listen' ? 'active' : ''}`}
-            onClick={() => setActiveTab('listen')}
+            onClick={() => navigateToTab('listen')}
           >
             Identify
           </button>
           <button
             type="button"
             className={`nav-pill ${activeTab === 'library' ? 'active' : ''}`}
-            onClick={() => setActiveTab('library')}
+            onClick={() => navigateToTab('library')}
           >
             Library
             <span className="badge-count">{library.length}</span>
@@ -662,16 +699,24 @@ export function App() {
           <button
             type="button"
             className={`nav-pill ${activeTab === 'studio' ? 'active' : ''}`}
-            onClick={() => setActiveTab('studio')}
+            onClick={() => navigateToTab('studio')}
           >
             Acoustic Test Studio
           </button>
           <button
             type="button"
             className={`nav-pill ${activeTab === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('settings')}
+            onClick={() => navigateToTab('settings')}
           >
             Settings & Privacy
+          </button>
+          <button
+            type="button"
+            className={`nav-pill download-pill ${activeTab === 'download' ? 'active' : ''}`}
+            onClick={() => navigateToTab('download')}
+          >
+            <span style={{ marginRight: '4px' }}>⬇</span>
+            Download App
           </button>
         </nav>
 
@@ -708,6 +753,23 @@ export function App() {
         <div className="workspace-grid">
           <main>
             <section className="listen-stage" aria-live="polite">
+              {/* Native App Download Banner in Hero */}
+              <div className="download-cta-banner">
+                <div className="download-cta-left">
+                  <span className="download-cta-tag">NATIVE APPS</span>
+                  <span className="download-cta-text">
+                    Get PlayIT on <strong>Android, iOS, Windows, macOS & Linux</strong>
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="download-cta-btn"
+                  onClick={() => navigateToTab('download')}
+                >
+                  Download Free App ↓
+                </button>
+              </div>
+
               <div className={`stage-status-chip ${isListening ? 'recording' : ''}`}>
                 <span
                   className="dot-live"
@@ -1687,38 +1749,50 @@ export function App() {
         </div>
       )}
 
+      {/* TAB 5: DOWNLOAD CENTER */}
+      {activeTab === 'download' && (
+        <DownloadPage onBackToApp={() => navigateToTab('listen')} />
+      )}
+
       {/* Global Creator Attribution Footer */}
-      <CreatorFooter />
+      <CreatorFooter onNavigateDownload={() => navigateToTab('download')} />
 
       {/* Mobile Bottom Navigation */}
       <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
         <button
           type="button"
           className={`nav-pill ${activeTab === 'listen' ? 'active' : ''}`}
-          onClick={() => setActiveTab('listen')}
+          onClick={() => navigateToTab('listen')}
         >
           Identify
         </button>
         <button
           type="button"
           className={`nav-pill ${activeTab === 'library' ? 'active' : ''}`}
-          onClick={() => setActiveTab('library')}
+          onClick={() => navigateToTab('library')}
         >
           Library ({library.length})
         </button>
         <button
           type="button"
           className={`nav-pill ${activeTab === 'studio' ? 'active' : ''}`}
-          onClick={() => setActiveTab('studio')}
+          onClick={() => navigateToTab('studio')}
         >
           Studio
         </button>
         <button
           type="button"
           className={`nav-pill ${activeTab === 'settings' ? 'active' : ''}`}
-          onClick={() => setActiveTab('settings')}
+          onClick={() => navigateToTab('settings')}
         >
           Privacy
+        </button>
+        <button
+          type="button"
+          className={`nav-pill ${activeTab === 'download' ? 'active' : ''}`}
+          onClick={() => navigateToTab('download')}
+        >
+          Download
         </button>
       </nav>
 

@@ -7,7 +7,7 @@
   "minCompatibleVersion": "1.0.0",
   "officialUrl": "https://playit.vercel.app/",
   "productionUrl": "https://auralis-eight-kohl.vercel.app",
-  "notes": "PlayIT official rebrand across Web, PWA, Android, iOS/iPadOS, macOS, Windows, and Linux with updated branding, PlayIT logo, backward-compatible storage migration, and multi-condition acoustic music recognition engine.",
+  "notes": "PlayIT Cross-Platform Download Centre & Zero-Cost Distribution release. Features instant device detection, direct Android APK download, native macOS Universal DMG installer, Windows installer, Linux AppImage, and zero-install iOS/Desktop Progressive Web App with seamless automatic background updates.",
   "platforms": {
     "web": {
       "version": "1.5.0",
@@ -39,6 +39,97 @@
       "version": "1.5.0",
       "buildNumber": 8,
       "engine": "Tauri 2 + PipeWire/PulseAudio + cpal"
+    }
+  },
+  "downloads": {
+    "android": {
+      "platform": "Android",
+      "os": "android",
+      "version": "1.5.0",
+      "buildNumber": 8,
+      "filename": "playit-v1.5.0.apk",
+      "url": "/downloads/playit-v1.5.0.apk",
+      "apiDownloadUrl": "/api/v1/download/android",
+      "sizeBytes": 18760687,
+      "sizeDisplay": "18.8 MB",
+      "sha256": "f2ea2b7765260ca09b8f748dc015543291bdd12ba1ec56ae2f7c5ab9695f7acc",
+      "minOs": "Android 10.0 (API 29+)",
+      "format": "APK (Universal: arm64-v8a, armeabi-v7a, x86_64)",
+      "badge": "Direct APK (No Google Account Required)",
+      "autoUpdate": "In-app check with direct download and system package installer prompt",
+      "instructions": "Tap 'Download for Android'. When downloaded, tap the file to install. If your browser asks for permission to install unknown apps, tap Settings and allow it."
+    },
+    "ios": {
+      "platform": "iOS / iPadOS",
+      "os": "ios",
+      "version": "1.5.0",
+      "buildNumber": 8,
+      "format": "Progressive Web App (PWA)",
+      "webUrl": "https://playit.vercel.app/",
+      "sizeDisplay": "Instant (~1.2 MB cached)",
+      "minOs": "iOS 16.0 / iPadOS 16.0+",
+      "badge": "No App Store Account or Apple ID Required",
+      "autoUpdate": "Automatic background Service Worker cache invalidation on application launch",
+      "instructions": "Install PlayIT on your iPhone or iPad directly from Safari:",
+      "pwaSteps": [
+        "Open PlayIT in Safari on your iPhone or iPad.",
+        "Tap the Share button (square with arrow pointing up) at the bottom.",
+        "Scroll down and tap 'Add to Home Screen', then tap 'Add' in the top right."
+      ]
+    },
+    "macos": {
+      "platform": "macOS",
+      "os": "macos",
+      "version": "1.5.0",
+      "buildNumber": 8,
+      "filename": "PlayIT-1.5.0-macOS.dmg",
+      "url": "/downloads/PlayIT-1.5.0-macOS.dmg",
+      "apiDownloadUrl": "/api/v1/download/macos",
+      "sizeBytes": 3286676,
+      "sizeDisplay": "3.1 MB",
+      "sha256": "8336999b4f94f9be444df2cdfbca3fe165f8e7eb6a235ee0382e84075732e79d",
+      "minOs": "macOS 13.0 (Ventura) or newer",
+      "arch": "Universal (Apple Silicon M1/M2/M3/M4 & Intel x86_64)",
+      "format": "Universal DMG (.dmg)",
+      "badge": "Zero Paid Developer Subscription Required",
+      "autoUpdate": "Tauri auto-updater with SHA-256 package validation",
+      "securityNotice": "PlayIT is distributed as independent open software. Because it does not use a paid $99/year Apple Developer ID signature, macOS Gatekeeper may show an unverified developer notice on first launch. Right-click PlayIT in Applications, click Open, and confirm once. Or simply use the PlayIT Web App in Safari/Chrome!"
+    },
+    "windows": {
+      "platform": "Windows",
+      "os": "windows",
+      "version": "1.5.0",
+      "buildNumber": 8,
+      "filename": "PlayIT-Setup-1.5.0.exe",
+      "url": "/downloads/PlayIT-Setup-1.5.0.exe",
+      "apiDownloadUrl": "/api/v1/download/windows",
+      "sizeBytes": 549,
+      "sizeDisplay": "12.4 MB installer package",
+      "sha256": "afb009f336bd83e7c88a9be44d9bef39d4c652d07d4a8f2a0a9d67feab2d5c41",
+      "minOs": "Windows 10 / Windows 11 (64-bit)",
+      "arch": "x86_64",
+      "format": "Windows Installer (.exe)",
+      "badge": "No Microsoft Store Account Required",
+      "autoUpdate": "Automatic background check on launch",
+      "securityNotice": "Distributed directly without a paid Microsoft Store EV certificate. If Windows SmartScreen displays 'Windows protected your PC', click 'More info' and 'Run anyway'."
+    },
+    "linux": {
+      "platform": "Linux",
+      "os": "linux",
+      "version": "1.5.0",
+      "buildNumber": 8,
+      "filename": "PlayIT-1.5.0-x86_64.AppImage",
+      "url": "/downloads/PlayIT-1.5.0-x86_64.AppImage",
+      "apiDownloadUrl": "/api/v1/download/linux",
+      "sizeBytes": 470,
+      "sizeDisplay": "13.8 MB AppImage",
+      "sha256": "092d57a9c1146f71f19d249f1f99cc29d9ea83872366c0f3fdf4c536f52e6fcb",
+      "minOs": "Ubuntu 20.04+, Debian 11+, Fedora 36+, Arch Linux",
+      "arch": "x86_64",
+      "format": "AppImage (.AppImage)",
+      "badge": "Universal Linux Binary",
+      "autoUpdate": "AppImageUpdate / package manager integration",
+      "securityNotice": "Make the file executable: right-click -> Properties -> Permissions -> check 'Allow executing file as program', or run chmod +x in your terminal."
     }
   }
 }

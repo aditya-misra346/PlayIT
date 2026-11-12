@@ -16,7 +16,7 @@
       "destination": "/api/index.js"
     },
     {
-      "source": "/((?!api/|assets/|icon\\.svg|manifest\\.webmanifest|sw\\.js).*)",
+      "source": "/((?!api/|assets/|downloads/|icon\\.svg|manifest\\.webmanifest|sw\\.js).*)",
       "destination": "/index.html"
     }
   ]
