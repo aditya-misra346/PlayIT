@@ -167,7 +167,10 @@ export const DownloadPage: React.FC<DownloadPageProps> = ({ onBackToApp, initial
       <section className="download-active-card">
         <div className="card-top-row">
           <div>
-            <div className="os-badge-chip">{currentItem?.platform ?? 'Universal'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+              <img src="/brand/logo-icon.svg" alt="PlayIT Brand Icon" width="44" height="44" style={{ borderRadius: '10px' }} />
+              <div className="os-badge-chip" style={{ margin: 0 }}>{currentItem?.platform ?? 'Universal'}</div>
+            </div>
             <h2 className="card-headline">
               {selectedPlatform === 'ios'
                 ? 'Install PlayIT on iPhone & iPad'

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="sonicGradSym" x1="120" y1="120" x2="440" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00F2FE"/>
+      <stop offset="48%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- P-Stem: Precision Vertical Audio Column with Rounded Terminals -->
+  <rect x="146" y="142" width="44" height="228" rx="22" fill="url(#sonicGradSym)"/>
+
+  <!-- P-Resonance Loop: Fluid Harmonic Acoustic Outer Loop -->
+  <path d="M168 142 H272 C324 142 358 174 358 224 C358 274 324 306 272 306 H190 C178 306 168 296 168 284 V142 Z"
+        fill="none" stroke="url(#sonicGradSym)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Play Discovery Impulse: Forward Recognition Trigger -->
+  <path d="M232 196 C232 190 239 186 244 190 L278 214 C283 218 283 226 278 230 L244 254 C239 258 232 254 232 248 Z"
+        fill="url(#sonicGradSym)"/>
+
+  <!-- Acoustic Emission Radar Arcs (Sound Frequency Discovery) -->
+  <path d="M374 162 A 136 136 0 0 1 374 286" stroke="url(#sonicGradSym)" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.95"/>
+  <path d="M414 134 A 180 180 0 0 1 414 314" stroke="url(#sonicGradSym)" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.75"/>
+  <path d="M452 108 A 224 224 0 0 1 452 340" stroke="url(#sonicGradSym)" stroke-width="11" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+</svg>

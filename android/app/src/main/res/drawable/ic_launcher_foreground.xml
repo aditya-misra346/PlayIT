@@ -4,26 +4,44 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- PlayIT icon: rounded play triangle with concentric acoustic pulse arcs -->
+    <!-- P-Stem Vertical Pillar -->
     <path
-        android:fillColor="#22D3EE"
-        android:pathData="M38,36 C38,33 41,31 44,33 L66,51 C69,53 69,57 66,59 L44,77 C41,79 38,77 38,74 Z" />
+        android:fillColor="#00F2FE"
+        android:pathData="M31,30 h9 c4.4,0 8,3.6 8,8 v48 c0,4.4 -3.6,8 -8,8 h-9 c-4.4,0 -8,-3.6 -8,-8 v-48 c0,-4.4 3.6,-8 8,-8 Z" />
+
+    <!-- P-Loop Acoustic Resonator -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#2F6BFF"
-        android:strokeWidth="3.5"
+        android:strokeColor="#2563EB"
+        android:strokeWidth="8"
         android:strokeLineCap="round"
-        android:pathData="M73,42 A16,16 0 0,1 73,66" />
+        android:strokeLineJoin="round"
+        android:pathData="M35,30 H58 C68,30 76,38 76,48 C76,58 68,66 58,66 H40" />
+
+    <!-- Play Discovery Triangle Node -->
+    <path
+        android:fillColor="#00F2FE"
+        android:pathData="M48,42 L59,48 L48,54 Z" />
+
+    <!-- Acoustic Wave Radar Arcs -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#22D3EE"
-        android:strokeWidth="3.2"
+        android:strokeColor="#00F2FE"
+        android:strokeWidth="3.6"
         android:strokeLineCap="round"
-        android:pathData="M81,35 A25,25 0 0,1 81,73" />
+        android:pathData="M78,36 A18,18 0 0,1 78,60" />
+
     <path
         android:fillColor="#00000000"
-        android:strokeColor="#14B8A6"
+        android:strokeColor="#7C3AED"
         android:strokeWidth="2.8"
         android:strokeLineCap="round"
-        android:pathData="M89,28 A34,34 0 0,1 89,80" />
+        android:pathData="M86,30 A28,28 0 0,1 86,66" />
+
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#2563EB"
+        android:strokeWidth="2.0"
+        android:strokeLineCap="round"
+        android:pathData="M94,24 A38,38 0 0,1 94,72" />
 </vector>

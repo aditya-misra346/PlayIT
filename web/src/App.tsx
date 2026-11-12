@@ -657,25 +657,38 @@ export function App() {
           onKeyDown={(e) => e.key === 'Enter' && navigateToTab('listen')}
         >
           <svg className="brand-mark" viewBox="0 0 512 512" fill="none" aria-hidden="true">
-            <rect width="512" height="512" rx="124" fill="#0B132B" />
-            <rect x="2" y="2" width="508" height="508" rx="122" stroke="url(#brandGrad)" strokeWidth="2.5" strokeOpacity="0.32" />
-            <path
-              d="M196 168 C196 156 208 148 219 154 L340 242 C350 248 350 264 340 270 L219 358 C208 364 196 356 196 344 Z"
-              fill="url(#brandGrad)"
-            />
-            <path d="M372 192 A 80 80 0 0 1 372 320" stroke="url(#brandGrad)" strokeWidth="20" strokeLinecap="round" opacity="0.95" />
-            <path d="M414 156 A 136 136 0 0 1 414 356" stroke="url(#brandGrad)" strokeWidth="17" strokeLinecap="round" strokeOpacity="0.65" />
-            <path d="M452 124 A 190 190 0 0 1 452 388" stroke="url(#brandGrad)" strokeWidth="14" strokeLinecap="round" strokeOpacity="0.35" />
             <defs>
-              <linearGradient id="brandGrad" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#2F6BFF" />
-                <stop offset="55%" stopColor="#22D3EE" />
-                <stop offset="100%" stopColor="#14B8A6" />
+              <linearGradient id="brandObsidian" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#0B132B" />
+                <stop offset="50%" stopColor="#070B19" />
+                <stop offset="100%" stopColor="#03050E" />
+              </linearGradient>
+              <linearGradient id="brandSonic" x1="120" y1="120" x2="440" y2="400" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#00F2FE" />
+                <stop offset="48%" stopColor="#2563EB" />
+                <stop offset="100%" stopColor="#7C3AED" />
               </linearGradient>
             </defs>
+            <rect width="512" height="512" rx="124" fill="url(#brandObsidian)" />
+            <rect x="2" y="2" width="508" height="508" rx="122" stroke="url(#brandSonic)" strokeWidth="3" strokeOpacity="0.45" />
+            <rect x="146" y="142" width="44" height="228" rx="22" fill="url(#brandSonic)" />
+            <path
+              d="M168 142 H272 C324 142 358 174 358 224 C358 274 324 306 272 306 H190 C178 306 168 296 168 284 V142 Z"
+              fill="none"
+              stroke="url(#brandSonic)"
+              strokeWidth="38"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path d="M232 196 C232 190 239 186 244 190 L278 214 C283 218 283 226 278 230 L244 254 C239 258 232 254 232 248 Z" fill="url(#brandSonic)" />
+            <path d="M374 162 A 136 136 0 0 1 374 286" stroke="url(#brandSonic)" strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.95" />
+            <path d="M414 134 A 180 180 0 0 1 414 314" stroke="url(#brandSonic)" strokeWidth="14" strokeLinecap="round" fill="none" opacity="0.75" />
+            <path d="M452 108 A 224 224 0 0 1 452 340" stroke="url(#brandSonic)" strokeWidth="11" strokeLinecap="round" fill="none" opacity="0.40" />
           </svg>
           <div>
-            <span className="brand-title">PlayIT</span>
+            <span className="brand-title">
+              PLAY<span style={{ color: 'var(--accent-cyan)' }}>IT</span>
+            </span>
             <span className="brand-tagline">Hear it. Know it.</span>
           </div>
         </div>

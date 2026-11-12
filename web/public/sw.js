@@ -1,5 +1,14 @@
 const CACHE_NAME = 'playit-shell-v1.5.0-8';
-const SHELL_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
+const SHELL_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.webmanifest',
+  '/favicon.svg',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icon.svg',
+  '/og-image.png'
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/types.ts","./src/version.ts","./src/audio/capture.ts","./src/audio/dsp.ts","./src/components/creatorfooter.tsx","./src/services/api.ts","./src/services/storage.ts"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/types.ts","./src/version.ts","./src/audio/capture.ts","./src/audio/dsp.ts","./src/components/creatorfooter.tsx","./src/components/downloadpage.tsx","./src/services/api.ts","./src/services/storage.ts"],"version":"5.9.3"}

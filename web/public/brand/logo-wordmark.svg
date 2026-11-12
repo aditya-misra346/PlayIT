@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 120" width="100%" height="100%" fill="none">
+  <text x="0" y="66" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif" font-weight="900" font-size="68" letter-spacing="2">
+    <tspan fill="#FFFFFF">PLAY</tspan>
+    <tspan fill="#00F2FE">IT</tspan>
+  </text>
+  <circle cx="238" cy="24" r="6" fill="#00F2FE"/>
+  <text x="3" y="102" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif" font-weight="700" font-size="14" fill="#94A3B8" letter-spacing="6">
+    HEAR IT. KNOW IT.
+  </text>
+</svg>

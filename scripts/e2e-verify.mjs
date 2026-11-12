@@ -40,11 +40,28 @@ async function verifyEndpoints(baseUrl, expectedVersion) {
   assert.equal(htmlRes.status, 200, 'Expected HTTP 200 on /');
   const html = await htmlRes.text();
   assert.ok(html.includes('PlayIT'), 'Expected PlayIT title in index.html');
+  assert.ok(html.includes('property="og:image" content="https://playit.vercel.app/og-image.png"'), 'Expected official og-image in index.html');
+  assert.ok(html.includes('name="twitter:card" content="summary_large_image"'), 'Expected summary_large_image Twitter card');
+  assert.ok(html.includes('property="og:title" content="PlayIT — Discover Music Instantly"'), 'Expected PlayIT Open Graph title');
+
+  // 1b. Verify Social Media Preview Image (1200x630 PNG) & Vector Brand Assets
+  const ogRes = await fetch(`${baseUrl}/og-image.png`);
+  assert.equal(ogRes.status, 200, 'Expected HTTP 200 on /og-image.png');
+  assert.equal(ogRes.headers.get('content-type'), 'image/png');
+  const ogBuf = await ogRes.arrayBuffer();
+  assert.ok(ogBuf.byteLength > 100000, `Expected og-image.png > 100 KB, got ${ogBuf.byteLength} bytes`);
+  console.log(`✔ Verified Social Media Preview Card (/og-image.png): ${ogBuf.byteLength} bytes (1200x630 PNG, HTTP 200)`);
+
+  const brandLogoRes = await fetch(`${baseUrl}/brand/logo.svg`);
+  assert.equal(brandLogoRes.status, 200, 'Expected HTTP 200 on /brand/logo.svg');
+  assert.equal(brandLogoRes.headers.get('content-type'), 'image/svg+xml');
+  console.log(`✔ Verified Vector Master Brand Logo (/brand/logo.svg)`);
 
   const manifestRes = await fetch(`${baseUrl}/manifest.webmanifest`);
   assert.equal(manifestRes.status, 200, 'Expected HTTP 200 on /manifest.webmanifest');
   const manifest = await manifestRes.json();
   assert.equal(manifest.short_name, 'PlayIT');
+  assert.ok(manifest.icons && manifest.icons.length >= 4, 'Expected manifest to contain at least 4 icon declarations');
 
   const swRes = await fetch(`${baseUrl}/sw.js`);
   assert.equal(swRes.status, 200, 'Expected HTTP 200 on /sw.js');
