@@ -4,26 +4,26 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Auralis mark: filled circle with three concentric partially open sound arcs offset to the right -->
+    <!-- PlayIT icon: rounded play triangle with concentric acoustic pulse arcs -->
     <path
-        android:fillColor="#2F6BFF"
-        android:pathData="M42,54m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+        android:fillColor="#22D3EE"
+        android:pathData="M38,36 C38,33 41,31 44,33 L66,51 C69,53 69,57 66,59 L44,77 C41,79 38,77 38,74 Z" />
     <path
         android:fillColor="#00000000"
         android:strokeColor="#2F6BFF"
-        android:strokeWidth="4"
+        android:strokeWidth="3.5"
         android:strokeLineCap="round"
-        android:pathData="M53,40 A18,18 0 0,1 53,68" />
+        android:pathData="M73,42 A16,16 0 0,1 73,66" />
     <path
         android:fillColor="#00000000"
         android:strokeColor="#22D3EE"
-        android:strokeWidth="4"
+        android:strokeWidth="3.2"
         android:strokeLineCap="round"
-        android:pathData="M59,33 A27,27 0 0,1 59,75" />
+        android:pathData="M81,35 A25,25 0 0,1 81,73" />
     <path
         android:fillColor="#00000000"
         android:strokeColor="#14B8A6"
-        android:strokeWidth="4"
+        android:strokeWidth="2.8"
         android:strokeLineCap="round"
-        android:pathData="M65,26 A36,36 0 0,1 65,82" />
+        android:pathData="M89,28 A34,34 0 0,1 89,80" />
 </vector>

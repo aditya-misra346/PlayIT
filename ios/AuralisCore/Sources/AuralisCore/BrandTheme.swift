@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 public enum AuralisBrand {
-    public static let productName = "Auralis"
+    public static let productName = "PlayIT"
     public static let tagline = "Hear it. Know it."
 
     // Hex constants from CONTRACT.md

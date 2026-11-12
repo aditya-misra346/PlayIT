@@ -15,5 +15,5 @@ pub fn run() {
             stop_capture,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running Auralis desktop application");
+        .expect("error while running PlayIT desktop application");
 }

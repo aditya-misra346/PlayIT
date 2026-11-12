@@ -17,7 +17,7 @@ import { buildTrack, link, safeMediaUrl } from './normalize.js';
  */
 export class LocalCatalogProvider implements RecognitionProvider {
   readonly id = 'local' as const;
-  readonly name = 'Auralis Acoustic Engine (Reference & Custom Catalog)';
+  readonly name = 'PlayIT Acoustic Engine (Reference & Custom Catalog)';
   readonly suppliesConfidence = true;
   readonly costPerRequestUsd = 0;
   private index: AcousticCatalogIndex;

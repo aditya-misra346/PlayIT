@@ -39,12 +39,12 @@ async function verifyEndpoints(baseUrl, expectedVersion) {
   const htmlRes = await fetch(`${baseUrl}/`);
   assert.equal(htmlRes.status, 200, 'Expected HTTP 200 on /');
   const html = await htmlRes.text();
-  assert.ok(html.includes('Auralis'), 'Expected Auralis title in index.html');
+  assert.ok(html.includes('PlayIT'), 'Expected PlayIT title in index.html');
 
   const manifestRes = await fetch(`${baseUrl}/manifest.webmanifest`);
   assert.equal(manifestRes.status, 200, 'Expected HTTP 200 on /manifest.webmanifest');
   const manifest = await manifestRes.json();
-  assert.equal(manifest.short_name, 'Auralis');
+  assert.equal(manifest.short_name, 'PlayIT');
 
   const swRes = await fetch(`${baseUrl}/sw.js`);
   assert.equal(swRes.status, 200, 'Expected HTTP 200 on /sw.js');

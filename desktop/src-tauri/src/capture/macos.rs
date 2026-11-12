@@ -100,7 +100,7 @@ pub fn list_system_audio_devices() -> Vec<AudioInputDevice> {
 fn format_permission_help(raw_stderr: &str) -> String {
     let trimmed = raw_stderr.trim();
     if trimmed.is_empty() {
-        "macOS Screen & System Audio Recording permission is not granted. Open System Settings > Privacy & Security > Screen & System Audio Recording, enable Auralis, or switch to Microphone mode.".to_string()
+        "macOS Screen & System Audio Recording permission is not granted. Open System Settings > Privacy & Security > Screen & System Audio Recording, enable PlayIT, or switch to Microphone mode.".to_string()
     } else {
         trimmed.to_string()
     }

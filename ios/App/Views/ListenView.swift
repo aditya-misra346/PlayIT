@@ -577,32 +577,28 @@ public struct AuralisBrandMarkView: View {
 
     public var body: some View {
         Canvas { context, canvasSize in
-            let center = CGPoint(x: canvasSize.width * 0.36, y: canvasSize.height * 0.5)
-            let dotRadius = canvasSize.width * 0.14
-
-            let dotRect = CGRect(
-                x: center.x - dotRadius,
-                y: center.y - dotRadius,
-                width: dotRadius * 2,
-                height: dotRadius * 2
-            )
-
             let resolvedColor = foregroundColor ?? AuralisBrand.cyan
-            context.fill(Path(ellipseIn: dotRect), with: .color(resolvedColor))
 
-            // Three concentric partially open sound-ring arcs offset to the right
+            var playPath = Path()
+            playPath.move(to: CGPoint(x: canvasSize.width * 0.22, y: canvasSize.height * 0.28))
+            playPath.addLine(to: CGPoint(x: canvasSize.width * 0.50, y: canvasSize.height * 0.50))
+            playPath.addLine(to: CGPoint(x: canvasSize.width * 0.22, y: canvasSize.height * 0.72))
+            playPath.closeSubpath()
+            context.fill(playPath, with: .color(resolvedColor))
+
+            let arcCenter = CGPoint(x: canvasSize.width * 0.38, y: canvasSize.height * 0.5)
             let radii: [CGFloat] = [
-                canvasSize.width * 0.25,
-                canvasSize.width * 0.37,
-                canvasSize.width * 0.49
+                canvasSize.width * 0.26,
+                canvasSize.width * 0.38,
+                canvasSize.width * 0.50
             ]
             let strokeWidth = max(2.0, canvasSize.width * 0.065)
 
             for (idx, r) in radii.enumerated() {
                 var arc = Path()
-                let angleSpan = Double(42 + idx * 8)
+                let angleSpan = Double(42 + idx * 6)
                 arc.addArc(
-                    center: center,
+                    center: arcCenter,
                     radius: r,
                     startAngle: .degrees(-angleSpan),
                     endAngle: .degrees(angleSpan),
@@ -610,7 +606,7 @@ public struct AuralisBrandMarkView: View {
                 )
                 context.stroke(
                     arc,
-                    with: .color(resolvedColor.opacity(1.0 - Double(idx) * 0.18)),
+                    with: .color(resolvedColor.opacity(1.0 - Double(idx) * 0.22)),
                     style: StrokeStyle(lineWidth: strokeWidth, lineCap: .round)
                 )
             }

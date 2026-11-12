@@ -1,4 +1,4 @@
-const CACHE_NAME = 'auralis-shell-v1.5.0-7';
+const CACHE_NAME = 'playit-shell-v1.5.0-8';
 const SHELL_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
 
 self.addEventListener('install', (event) => {

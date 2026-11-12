@@ -73,7 +73,7 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
       res.setHeader('Access-Control-Allow-Origin', '*');
     }
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Auralis-Client, X-Auralis-Install');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-PlayIT-Client, X-PlayIT-Install, X-Auralis-Client, X-Auralis-Install');
     res.setHeader('Access-Control-Expose-Headers', 'Retry-After, X-Request-Id');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
@@ -124,7 +124,7 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
 
   function getIdentityKey(req: IncomingMessage, userId?: string): string {
     if (userId) return `user:${userId}`;
-    const installId = String(req.headers['x-auralis-install'] ?? '').trim();
+    const installId = String(req.headers['x-playit-install'] ?? req.headers['x-auralis-install'] ?? '').trim();
     if (installId && installId.length >= 8 && installId.length <= 80) {
       return `install:${installId}`;
     }
@@ -212,7 +212,7 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
         const providerStatus = orchestrator.listProviderStatus();
         sendJson(res, 200, {
           status: 'ok',
-          service: 'auralis-recognition-server',
+          service: 'playit-recognition-server',
           version: RELEASE_MANIFEST.version,
           buildNumber: RELEASE_MANIFEST.buildNumber,
           providers: providerStatus,
@@ -259,7 +259,7 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
         const identity = getIdentityKey(req, user?.id);
         rateLimiter.checkAndConsume(identity, Boolean(user));
 
-        const clientHeader = String(req.headers['x-auralis-client'] ?? 'web/1.0');
+        const clientHeader = String(req.headers['x-playit-client'] ?? req.headers['x-auralis-client'] ?? 'web/1.0');
         const platform = clientHeader.split('/')[0] || 'web';
         const { wav, source, durationMs, provider } = await parseRecognizeInput(req);
 

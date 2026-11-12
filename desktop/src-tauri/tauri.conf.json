@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Auralis",
+  "productName": "PlayIT",
   "version": "1.5.0",
   "identifier": "app.auralis.desktop",
   "build": {
@@ -11,7 +11,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Auralis — Hear it. Know it.",
+        "title": "PlayIT — Hear it. Know it.",
         "width": 1080,
         "height": 760,
         "minWidth": 380,

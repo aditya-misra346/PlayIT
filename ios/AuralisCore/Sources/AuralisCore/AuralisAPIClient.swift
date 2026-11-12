@@ -261,6 +261,8 @@ public final class AuralisAPIClient: @unchecked Sendable {
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.timeoutInterval = 25
+        request.setValue(clientHeaderValue, forHTTPHeaderField: "X-PlayIT-Client")
+        request.setValue(installId, forHTTPHeaderField: "X-PlayIT-Install")
         request.setValue(clientHeaderValue, forHTTPHeaderField: "X-Auralis-Client")
         request.setValue(installId, forHTTPHeaderField: "X-Auralis-Install")
         request.setValue("application/json", forHTTPHeaderField: "Accept")

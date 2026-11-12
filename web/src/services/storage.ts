@@ -1,22 +1,30 @@
 import type { LibraryItem, TrackMatch } from '../types';
 
 const STORAGE_KEYS = {
-  INSTALL_ID: 'auralis.installId.v1',
-  LIBRARY: 'auralis.library.v1',
-  AUTH_TOKEN: 'auralis.authToken.v1',
-  AUTH_USER: 'auralis.authUser.v1',
-  MIC_CONSENT: 'auralis.micConsentShown.v1',
-  PREFERRED_DEVICE: 'auralis.preferredDevice.v1',
-  API_BASE: 'auralis.apiBase.v1',
+  INSTALL_ID: 'playit.installId.v1',
+  LEGACY_INSTALL_ID: 'auralis.installId.v1',
+  LIBRARY: 'playit.library.v1',
+  LEGACY_LIBRARY: 'auralis.library.v1',
+  AUTH_TOKEN: 'playit.authToken.v1',
+  LEGACY_AUTH_TOKEN: 'auralis.authToken.v1',
+  AUTH_USER: 'playit.authUser.v1',
+  LEGACY_AUTH_USER: 'auralis.authUser.v1',
+  MIC_CONSENT: 'playit.micConsentShown.v1',
+  LEGACY_MIC_CONSENT: 'auralis.micConsentShown.v1',
+  PREFERRED_DEVICE: 'playit.preferredDevice.v1',
+  LEGACY_PREFERRED_DEVICE: 'auralis.preferredDevice.v1',
+  API_BASE: 'playit.apiBase.v1',
+  LEGACY_API_BASE: 'auralis.apiBase.v1',
 };
 
 export function getInstallId(): string {
   try {
-    let id = localStorage.getItem(STORAGE_KEYS.INSTALL_ID);
+    let id = localStorage.getItem(STORAGE_KEYS.INSTALL_ID) ?? localStorage.getItem(STORAGE_KEYS.LEGACY_INSTALL_ID);
     if (!id) {
       id = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `inst-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      localStorage.setItem(STORAGE_KEYS.INSTALL_ID, id);
     }
+    // Ensure persisted under the new PlayIT namespace
+    localStorage.setItem(STORAGE_KEYS.INSTALL_ID, id);
     return id;
   } catch {
     return 'anonymous-web-client';
@@ -25,7 +33,7 @@ export function getInstallId(): string {
 
 export function getApiBaseUrl(): string {
   try {
-    const custom = localStorage.getItem(STORAGE_KEYS.API_BASE);
+    const custom = localStorage.getItem(STORAGE_KEYS.API_BASE) ?? localStorage.getItem(STORAGE_KEYS.LEGACY_API_BASE);
     if (custom) return custom.replace(/\/$/, '');
   } catch {
     // ignore
@@ -35,8 +43,12 @@ export function getApiBaseUrl(): string {
 
 export function setApiBaseUrl(url: string): void {
   try {
-    if (!url.trim()) localStorage.removeItem(STORAGE_KEYS.API_BASE);
-    else localStorage.setItem(STORAGE_KEYS.API_BASE, url.trim().replace(/\/$/, ''));
+    if (!url.trim()) {
+      localStorage.removeItem(STORAGE_KEYS.API_BASE);
+      localStorage.removeItem(STORAGE_KEYS.LEGACY_API_BASE);
+    } else {
+      localStorage.setItem(STORAGE_KEYS.API_BASE, url.trim().replace(/\/$/, ''));
+    }
   } catch {
     // ignore
   }
@@ -45,10 +57,14 @@ export function setApiBaseUrl(url: string): void {
 /**
  * Loads saved recognition history & library from versioned local storage.
  * Stores metadata only — raw microphone recordings are never persisted.
+ * Transparently migrates any existing legacy library entries to PlayIT.
  */
 export function loadLibraryItems(): LibraryItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.LIBRARY);
+    let raw = localStorage.getItem(STORAGE_KEYS.LIBRARY);
+    if (!raw) {
+      raw = localStorage.getItem(STORAGE_KEYS.LEGACY_LIBRARY);
+    }
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     const list: LibraryItem[] = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.items) ? parsed.items : [];
@@ -62,7 +78,10 @@ export function loadLibraryItems(): LibraryItem[] {
 
 export function loadAllLibraryItemsWithTombstones(): LibraryItem[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.LIBRARY);
+    let raw = localStorage.getItem(STORAGE_KEYS.LIBRARY);
+    if (!raw) {
+      raw = localStorage.getItem(STORAGE_KEYS.LEGACY_LIBRARY);
+    }
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed?.items) ? parsed.items : Array.isArray(parsed) ? parsed : [];
@@ -128,6 +147,7 @@ export function replaceLibraryFromSync(items: LibraryItem[]): LibraryItem[] {
 export function clearLocalLibrary(): void {
   try {
     localStorage.removeItem(STORAGE_KEYS.LIBRARY);
+    localStorage.removeItem(STORAGE_KEYS.LEGACY_LIBRARY);
   } catch {
     // ignore
   }
@@ -137,7 +157,7 @@ export function exportLibraryAsJsonFile(items: LibraryItem[]): void {
   const payload = JSON.stringify(
     {
       exportedAt: new Date().toISOString(),
-      product: 'Auralis Music Recognition',
+      product: 'PlayIT Music Recognition',
       count: items.length,
       items,
     },
@@ -148,7 +168,7 @@ export function exportLibraryAsJsonFile(items: LibraryItem[]): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `auralis-recognition-history-${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `playit-recognition-history-${new Date().toISOString().slice(0, 10)}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -157,7 +177,7 @@ export function exportLibraryAsJsonFile(items: LibraryItem[]): void {
 
 export function hasShownMicConsent(): boolean {
   try {
-    return localStorage.getItem(STORAGE_KEYS.MIC_CONSENT) === '1';
+    return localStorage.getItem(STORAGE_KEYS.MIC_CONSENT) === '1' || localStorage.getItem(STORAGE_KEYS.LEGACY_MIC_CONSENT) === '1';
   } catch {
     return false;
   }
@@ -173,7 +193,7 @@ export function markMicConsentShown(): void {
 
 export function getAuthToken(): string | null {
   try {
-    return localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    return localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN) ?? localStorage.getItem(STORAGE_KEYS.LEGACY_AUTH_TOKEN);
   } catch {
     return null;
   }
@@ -181,7 +201,7 @@ export function getAuthToken(): string | null {
 
 export function getAuthUser(): { id: string; email: string } | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.AUTH_USER);
+    const raw = localStorage.getItem(STORAGE_KEYS.AUTH_USER) ?? localStorage.getItem(STORAGE_KEYS.LEGACY_AUTH_USER);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -196,6 +216,8 @@ export function setAuthSession(token: string | null, user: { id: string; email: 
     } else {
       localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
       localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
+      localStorage.removeItem(STORAGE_KEYS.LEGACY_AUTH_TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.LEGACY_AUTH_USER);
     }
   } catch {
     // ignore

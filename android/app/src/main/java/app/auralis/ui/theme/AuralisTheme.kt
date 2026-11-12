@@ -11,6 +11,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
@@ -151,8 +152,8 @@ fun AuralisTheme(content: @Composable () -> Unit) {
 }
 
 /**
- * Brand mark from docs/CONTRACT.md:
- * "a filled circle with three concentric, partially open arcs (sound rings) offset to the right."
+ * PlayIT Brand Mark:
+ * A modern rounded play symbol with three concentric, partially open acoustic pulse arcs offset to the right.
  */
 @Composable
 fun AuralisMark(
@@ -162,29 +163,34 @@ fun AuralisMark(
     Canvas(modifier = modifier.size(size)) {
         val w = this.size.width
         val h = this.size.height
-        val center = Offset(w * 0.36f, h * 0.5f)
-        val dotRadius = w * 0.16f
 
-        drawCircle(
+        val playPath = Path().apply {
+            moveTo(w * 0.22f, h * 0.28f)
+            lineTo(w * 0.50f, h * 0.50f)
+            lineTo(w * 0.22f, h * 0.72f)
+            close()
+        }
+
+        drawPath(
+            path = playPath,
             brush = Brush.linearGradient(
                 colors = listOf(AuralisColors.ElectricBlue, AuralisColors.Cyan),
-                start = Offset(center.x - dotRadius, center.y - dotRadius),
-                end = Offset(center.x + dotRadius, center.y + dotRadius)
-            ),
-            radius = dotRadius,
-            center = center
+                start = Offset(w * 0.22f, h * 0.28f),
+                end = Offset(w * 0.50f, h * 0.72f)
+            )
         )
 
         val strokeWidth = (w * 0.075f).coerceAtLeast(2f)
-        val radii = listOf(w * 0.28f, w * 0.41f, w * 0.54f)
+        val radii = listOf(w * 0.26f, w * 0.38f, w * 0.50f)
         val colors = listOf(AuralisColors.ElectricBlue, AuralisColors.Cyan, AuralisColors.Teal)
+        val arcCenter = Offset(w * 0.38f, h * 0.5f)
 
         radii.forEachIndexed { idx, r ->
-            val topLeft = Offset(center.x - r, center.y - r)
+            val topLeft = Offset(arcCenter.x - r, arcCenter.y - r)
             drawArc(
                 color = colors[idx],
-                startAngle = -52f,
-                sweepAngle = 104f,
+                startAngle = -48f,
+                sweepAngle = 96f,
                 useCenter = false,
                 topLeft = topLeft,
                 size = Size(r * 2f, r * 2f),

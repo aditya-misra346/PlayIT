@@ -597,7 +597,7 @@ class AuralisViewModel(application: Application) : AndroidViewModel(application)
                     it.copy(
                         serverProviders = config.providers,
                         serverShazamKitTokensConfigured = config.shazamkitTokens,
-                        bannerMessage = if (!silent) "Connected to Auralis server." else it.bannerMessage
+                        bannerMessage = if (!silent) "Connected to PlayIT server." else it.bannerMessage
                     )
                 }
             }.onFailure { err ->

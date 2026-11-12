@@ -10,6 +10,6 @@ server.listen(cfg.port, cfg.host, () => {
     .map((p) => `${p.id}(${p.configured ? p.role : 'unconfigured'})`)
     .join(', ');
   console.log(
-    `[Auralis Server] Listening on http://${cfg.host}:${cfg.port} | env=${cfg.nodeEnv} | providers=[${providers}] | referenceTracks=${local.catalogSize}`,
+    `[PlayIT Server] Listening on http://${cfg.host}:${cfg.port} | env=${cfg.nodeEnv} | providers=[${providers}] | referenceTracks=${local.catalogSize}`,
   );
 });

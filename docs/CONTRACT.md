@@ -1,13 +1,14 @@
-# Auralis — Shared Contract (source of truth for all clients)
+# PlayIT — Shared Contract (source of truth for all clients)
 
-Auralis is an original music-recognition product. Do NOT use Shazam branding, logos or UI copies.
+PlayIT is an original music-recognition product. Do NOT use Shazam branding, logos or UI copies.
 
 ## Brand
-- Name: **Auralis** — tagline "Hear it. Know it."
+- Name: **PlayIT** — tagline "Hear it. Know it."
+- Official Website: `https://playit.vercel.app/`
 - Dark-only. Colors: midnight `#060A14` (bg), deep `#0B1220` (surface), charcoal `#121A2B` (elevated),
   line `#1E2A40`, text `#EAF2FF`, muted `#8A9BB8`, electric blue `#2F6BFF`, cyan `#22D3EE`, teal `#14B8A6`,
   danger `#FF5A6E`, warn `#FFB547`. Signature gradient: `linear(135deg, #2F6BFF → #22D3EE → #14B8A6)`.
-- Mark: a filled circle with three concentric, partially open arcs (sound rings) offset to the right.
+- Mark: a modern rounded play symbol with three concentric, partially open acoustic pulse arcs offset to the right.
 - Font: system UI stack (SF Pro / Segoe UI / Inter / Roboto). Title weight 700, tight tracking.
 
 ## Recognition states (all clients must implement)
@@ -29,8 +30,8 @@ Auralis is an original music-recognition product. Do NOT use Shazam branding, lo
 - Live level meter during capture must come from the real input (RMS of the most recent ~50 ms, mapped −60..0 dBFS → 0..1).
 
 ## HTTP API (server, base `/api/v1`)
-All responses JSON. Clients send header `X-Auralis-Client: <platform>/<version>` (web, desktop-macos, desktop-windows,
-desktop-linux, android, ios) and `X-Auralis-Install: <random uuid persisted locally>` (used for rate limiting only).
+All responses JSON. Clients send header `X-PlayIT-Client: <platform>/<version>` (or legacy `X-Auralis-Client`)
+and `X-PlayIT-Install: <random uuid persisted locally>` (or legacy `X-Auralis-Install`).
 Optional `Authorization: Bearer <sessionToken>` when signed in.
 
 ### GET /api/v1/config

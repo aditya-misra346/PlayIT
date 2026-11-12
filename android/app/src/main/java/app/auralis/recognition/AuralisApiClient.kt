@@ -57,8 +57,12 @@ class AuralisApiClient(
     }
 
     private fun Request.Builder.applyAuralisHeaders(): Request.Builder {
-        header("X-Auralis-Client", "android/$clientVersion")
-        header("X-Auralis-Install", installIdProvider())
+        val client = "android/$clientVersion"
+        val install = installIdProvider()
+        header("X-PlayIT-Client", client)
+        header("X-PlayIT-Install", install)
+        header("X-Auralis-Client", client)
+        header("X-Auralis-Install", install)
         header("Accept", "application/json")
         val token = authTokenProvider()?.trim()
         if (!token.isNullOrEmpty()) {

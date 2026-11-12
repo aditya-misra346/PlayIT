@@ -1,18 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
-    <linearGradient id="auralisBg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0B1220"/>
-      <stop offset="100%" stop-color="#060A14"/>
+    <linearGradient id="playitBg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B132B"/>
+      <stop offset="50%" stop-color="#070D1E"/>
+      <stop offset="100%" stop-color="#030611"/>
     </linearGradient>
-    <linearGradient id="auralisAccent" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+    <linearGradient id="playitGradient" x1="120" y1="120" x2="420" y2="420" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#2F6BFF"/>
-      <stop offset="55%" stop-color="#22D3EE"/>
+      <stop offset="50%" stop-color="#22D3EE"/>
       <stop offset="100%" stop-color="#14B8A6"/>
     </linearGradient>
+    <linearGradient id="playitGlow" x1="160" y1="160" x2="350" y2="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.2"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="120" fill="url(#auralisBg)"/>
-  <circle cx="216" cy="256" r="68" fill="url(#auralisAccent)"/>
-  <path d="M292 182 A 104 104 0 0 1 292 330" stroke="url(#auralisAccent)" stroke-width="24" stroke-linecap="round"/>
-  <path d="M336 142 A 158 158 0 0 1 336 370" stroke="url(#auralisAccent)" stroke-width="22" stroke-linecap="round" stroke-opacity="0.78"/>
-  <path d="M380 104 A 212 212 0 0 1 380 408" stroke="url(#auralisAccent)" stroke-width="18" stroke-linecap="round" stroke-opacity="0.48"/>
+
+  <!-- Premium Obsidian Squircle Backdrop -->
+  <rect width="512" height="512" rx="124" fill="url(#playitBg)"/>
+  <rect x="2" y="2" width="508" height="508" rx="122" stroke="url(#playitGradient)" stroke-width="2.5" stroke-opacity="0.32"/>
+
+  <!-- Subtle Radial Glow behind Play Glyph -->
+  <circle cx="236" cy="256" r="130" fill="url(#playitGlow)" filter="url(#softGlow)" opacity="0.45"/>
+
+  <!-- PlayIT Primary Play Symbol with Rounded Corners -->
+  <path d="M196 168 C196 156 208 148 219 154 L340 242 C350 248 350 264 340 270 L219 358 C208 364 196 356 196 344 Z"
+        fill="url(#playitGradient)"/>
+
+  <!-- Dynamic Acoustic Soundwave Pulse Arcs (Right) -->
+  <path d="M372 192 A 80 80 0 0 1 372 320" stroke="url(#playitGradient)" stroke-width="20" stroke-linecap="round" opacity="0.95"/>
+  <path d="M414 156 A 136 136 0 0 1 414 356" stroke="url(#playitGradient)" stroke-width="17" stroke-linecap="round" stroke-opacity="0.65"/>
+  <path d="M452 124 A 190 190 0 0 1 452 388" stroke="url(#playitGradient)" stroke-width="14" stroke-linecap="round" stroke-opacity="0.35"/>
 </svg>

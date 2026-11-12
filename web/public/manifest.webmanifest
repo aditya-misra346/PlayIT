@@ -1,6 +1,6 @@
 {
-  "name": "Auralis — Music Recognition",
-  "short_name": "Auralis",
+  "name": "PlayIT — Music Recognition",
+  "short_name": "PlayIT",
   "description": "Hear it. Know it. Instant acoustic music recognition across Web, Mobile, and Desktop.",
   "start_url": "/",
   "display": "standalone",

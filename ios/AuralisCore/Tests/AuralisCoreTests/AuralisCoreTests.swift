@@ -11,7 +11,7 @@ struct AuralisCoreTests {
 
     @Test("Brand colors and recognition states match CONTRACT.md")
     func testBrandAndStatesContract() {
-        #expect(AuralisBrand.productName == "Auralis")
+        #expect(AuralisBrand.productName == "PlayIT")
         #expect(AuralisBrand.tagline == "Hear it. Know it.")
         #expect(AuralisBrand.midnightBgHex == "#060A14")
         #expect(AuralisBrand.deepSurfaceHex == "#0B1220")

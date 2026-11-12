@@ -102,7 +102,7 @@ export const SUPPORTED_PLATFORMS = [
 });
 
 updateFile('web/public/sw.js', (raw) =>
-  raw.replace(/const CACHE_NAME = '[^']+';/, `const CACHE_NAME = 'auralis-shell-v${version}-${buildNumber}';`),
+  raw.replace(/const CACHE_NAME = '[^']+';/, `const CACHE_NAME = 'playit-shell-v${version}-${buildNumber}';`),
 );
 
 // 4. Desktop (macOS, Windows, Linux — Tauri 2)

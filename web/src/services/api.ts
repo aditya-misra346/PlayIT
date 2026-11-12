@@ -15,9 +15,12 @@ export class ClientApiError extends Error {
 
 function buildHeaders(extra?: Record<string, string>): Record<string, string> {
   const platform = isTauriDesktop() ? 'desktop/1.0' : 'web/1.0';
+  const installId = getInstallId();
   const headers: Record<string, string> = {
+    'X-PlayIT-Client': platform,
+    'X-PlayIT-Install': installId,
     'X-Auralis-Client': platform,
-    'X-Auralis-Install': getInstallId(),
+    'X-Auralis-Install': installId,
     ...extra,
   };
   const token = getAuthToken();
@@ -103,7 +106,7 @@ export async function submitRecognitionSample(opts: {
     if (e?.name === 'AbortError') throw e;
     throw new ClientApiError(
       'CONNECTION_ERROR',
-      'Could not reach the Auralis recognition server. Check your internet connection.',
+      'Could not reach the PlayIT recognition server. Check your internet connection.',
       true,
       0,
     );

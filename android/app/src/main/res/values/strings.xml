@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Auralis</string>
+    <string name="app_name">PlayIT</string>
     <string name="tagline">Hear it. Know it.</string>
     <string name="capture_channel_name">Audio capture</string>
-    <string name="capture_channel_desc">Shown while Auralis listens to audio playing on this device.</string>
-    <string name="capture_notification_title">Auralis is listening to device audio</string>
+    <string name="capture_channel_desc">Shown while PlayIT listens to audio playing on this device.</string>
+    <string name="capture_notification_title">PlayIT is listening to device audio</string>
     <string name="capture_notification_text">Capture stops automatically after a few seconds.</string>
 </resources>

@@ -555,7 +555,7 @@ export function App() {
       const shareUrl = track.links[0]?.url ?? window.location.href;
       if (navigator.share) {
         try {
-          await navigator.share({ title: track.title, text: `Identified with Auralis: ${shareText}`, url: shareUrl });
+          await navigator.share({ title: track.title, text: `Identified with PlayIT: ${shareText}`, url: shareUrl });
           return;
         } catch {
           // User cancelled or share failed; fall back to clipboard
@@ -606,7 +606,7 @@ export function App() {
   const ringScale3 = isListening ? 1 + liveLevel.rms * 0.62 : 1;
   const stateCopy = STATE_LABELS[state];
   const primaryProviderName =
-    serverConfig?.providers.find((p) => p.role === 'primary')?.name ?? 'Auralis Acoustic Engine';
+    serverConfig?.providers.find((p) => p.role === 'primary')?.name ?? 'PlayIT Acoustic Engine';
 
   return (
     <div className="app-shell">
@@ -620,23 +620,15 @@ export function App() {
           onKeyDown={(e) => e.key === 'Enter' && setActiveTab('listen')}
         >
           <svg className="brand-mark" viewBox="0 0 512 512" fill="none" aria-hidden="true">
-            <rect width="512" height="512" rx="120" fill="#121A2B" />
-            <circle cx="212" cy="256" r="70" fill="url(#brandGrad)" />
-            <path d="M290 180 A 106 106 0 0 1 290 332" stroke="url(#brandGrad)" strokeWidth="26" strokeLinecap="round" />
+            <rect width="512" height="512" rx="124" fill="#0B132B" />
+            <rect x="2" y="2" width="508" height="508" rx="122" stroke="url(#brandGrad)" strokeWidth="2.5" strokeOpacity="0.32" />
             <path
-              d="M336 140 A 160 160 0 0 1 336 372"
-              stroke="url(#brandGrad)"
-              strokeWidth="22"
-              strokeLinecap="round"
-              strokeOpacity="0.75"
+              d="M196 168 C196 156 208 148 219 154 L340 242 C350 248 350 264 340 270 L219 358 C208 364 196 356 196 344 Z"
+              fill="url(#brandGrad)"
             />
-            <path
-              d="M380 102 A 214 214 0 0 1 380 410"
-              stroke="url(#brandGrad)"
-              strokeWidth="18"
-              strokeLinecap="round"
-              strokeOpacity="0.45"
-            />
+            <path d="M372 192 A 80 80 0 0 1 372 320" stroke="url(#brandGrad)" strokeWidth="20" strokeLinecap="round" opacity="0.95" />
+            <path d="M414 156 A 136 136 0 0 1 414 356" stroke="url(#brandGrad)" strokeWidth="17" strokeLinecap="round" strokeOpacity="0.65" />
+            <path d="M452 124 A 190 190 0 0 1 452 388" stroke="url(#brandGrad)" strokeWidth="14" strokeLinecap="round" strokeOpacity="0.35" />
             <defs>
               <linearGradient id="brandGrad" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="#2F6BFF" />
@@ -646,7 +638,7 @@ export function App() {
             </defs>
           </svg>
           <div>
-            <span className="brand-title">Auralis</span>
+            <span className="brand-title">PlayIT</span>
             <span className="brand-tagline">Hear it. Know it.</span>
           </div>
         </div>
@@ -901,7 +893,7 @@ export function App() {
 
               <p className="privacy-microcopy">
                 {serverConfig?.disclosure ??
-                  'A short ~10-second audio sample is processed to identify the song and immediately discarded. Auralis never records in the background.'}
+                  'A short ~10-second audio sample is processed to identify the song and immediately discarded. PlayIT never records in the background.'}
               </p>
 
               {/* Phase 3 Diagnostic Audio-Analysis Layer */}
@@ -1426,7 +1418,7 @@ export function App() {
             <div>
               <h1 style={{ fontSize: '1.45rem', fontWeight: 800 }}>Acoustic Test Studio & Reference Catalog</h1>
               <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginTop: '4px', maxWidth: '780px' }}>
-                Validate Auralis recognition accuracy across clean studio audio, external speaker coloration, noisy environments, room echo, and low-volume playback — or play any track out loud through your speakers and identify it via microphone.
+                Validate PlayIT recognition accuracy across clean studio audio, external speaker coloration, noisy environments, room echo, and low-volume playback — or play any track out loud through your speakers and identify it via microphone.
               </p>
             </div>
             <div className="control-box" style={{ minWidth: '250px' }}>
@@ -1511,7 +1503,7 @@ export function App() {
               Recognition Architecture & Privacy Controls
             </h1>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.55, marginBottom: '18px' }}>
-              Auralis uses a modular multi-provider recognition architecture. API credentials remain strictly on the backend server and are never exposed in client bundles.
+              PlayIT uses a modular multi-provider recognition architecture. API credentials remain strictly on the backend server and are never exposed in client bundles.
             </p>
 
             <h2 style={{ fontSize: '0.98rem', fontWeight: 700, marginBottom: '10px' }}>Configured Recognition Providers</h2>
@@ -1738,7 +1730,7 @@ export function App() {
               Microphone Access for Song Identification
             </h2>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.55, marginBottom: '14px' }}>
-              To identify music playing around you, Auralis needs temporary access to your microphone to capture a short (~10 second) audio sample.
+              To identify music playing around you, PlayIT needs temporary access to your microphone to capture a short (~10 second) audio sample.
             </p>
             <ul style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.55, paddingLeft: '18px', marginBottom: '18px' }}>
               <li>Capture stops automatically as soon as the sample is collected or when you tap Stop.</li>

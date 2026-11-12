@@ -55,7 +55,7 @@ export async function getPlatformAudioCapabilities(): Promise<DesktopCapabilitie
         ? 'Mobile browsers do not expose internal system audio capture. Use microphone mode or the native Android/Desktop app.'
         : hasDisplayMedia
           ? null
-          : 'This browser does not support tab/system audio sharing. Use microphone mode or the Auralis desktop app.',
+          : 'This browser does not support tab/system audio sharing. Use microphone mode or the PlayIT desktop app.',
     },
   };
 }

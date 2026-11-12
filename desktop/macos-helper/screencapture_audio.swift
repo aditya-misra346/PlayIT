@@ -198,7 +198,7 @@ struct AuralisMacOSAudioHelper {
             )
         } catch {
             writeStderr(
-                "PERMISSION_DENIED: Screen & System Audio Recording permission is required to capture macOS system audio (\(error.localizedDescription)). Grant Auralis permission in System Settings > Privacy & Security > Screen & System Audio Recording, or switch to Microphone mode."
+                "PERMISSION_DENIED: Screen & System Audio Recording permission is required to capture macOS system audio (\(error.localizedDescription)). Grant PlayIT permission in System Settings > Privacy & Security > Screen & System Audio Recording, or switch to Microphone mode."
             )
             Darwin.exit(HelperExitCode.permissionDenied.rawValue)
         }
