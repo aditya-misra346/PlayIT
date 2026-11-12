@@ -217,6 +217,10 @@ public struct LibraryView: View {
                     }
                 }
             }
+
+            CreatorFooterView()
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
@@ -241,6 +245,7 @@ public struct LibraryView: View {
             .multilineTextAlignment(.center)
             .padding(.horizontal, 36)
             Spacer()
+            CreatorFooterView()
         }
     }
 }

@@ -48,6 +48,7 @@ import type {
   TrackMatch,
 } from './types';
 import { APP_BUILD_NUMBER, APP_VERSION, SUPPORTED_PLATFORMS } from './version';
+import { CreatorFooter } from './components/CreatorFooter';
 
 type ActiveTab = 'listen' | 'library' | 'studio' | 'settings';
 type DateFilter = 'all' | 'today' | '7d' | '30d';
@@ -1693,6 +1694,9 @@ export function App() {
           </aside>
         </div>
       )}
+
+      {/* Global Creator Attribution Footer */}
+      <CreatorFooter />
 
       {/* Mobile Bottom Navigation */}
       <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">

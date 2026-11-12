@@ -38,6 +38,8 @@ public struct ResultDetailView: View {
                 }
 
                 actionsSection
+
+                CreatorFooterView()
             }
             .padding(20)
         }

@@ -58,6 +58,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.auralis.model.LibraryItem
 import app.auralis.model.TrackLink
+import app.auralis.ui.components.CreatorFooter
 import app.auralis.ui.theme.AuralisColors
 import app.auralis.ui.theme.AuralisMark
 import coil.compose.AsyncImage
@@ -399,7 +400,9 @@ fun ResultScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            CreatorFooter()
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

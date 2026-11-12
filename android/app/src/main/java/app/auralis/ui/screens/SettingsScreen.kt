@@ -59,6 +59,7 @@ import app.auralis.audio.AudioCaptureMode
 import app.auralis.audio.AudioInputDevice
 import app.auralis.data.UserSettingsState
 import app.auralis.ui.RecognitionUiState
+import app.auralis.ui.components.CreatorFooter
 import app.auralis.ui.theme.AuralisColors
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -441,7 +442,9 @@ fun SettingsScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        CreatorFooter()
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

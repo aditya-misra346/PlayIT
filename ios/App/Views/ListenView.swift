@@ -40,6 +40,8 @@ public struct ListenView: View {
                 }
 
                 microphonePickerAndSandboxNoticeCard
+
+                CreatorFooterView()
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)

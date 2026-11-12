@@ -32,6 +32,9 @@ struct AuralisCoreTests {
         ]
         let actualStates = Set(RecognitionState.allCases.map(\.rawValue))
         #expect(actualStates == expectedStates)
+
+        let footer = CreatorFooterView()
+        #expect(String(describing: type(of: footer)) == "CreatorFooterView")
     }
 
     // MARK: - 2. DSP & Quality Gate Tests

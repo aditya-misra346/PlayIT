@@ -29,6 +29,8 @@ public struct SettingsView: View {
                 accountAndSyncSection
 
                 privacyAndDiagnosticsSection
+
+                CreatorFooterView()
             }
             .padding(20)
         }

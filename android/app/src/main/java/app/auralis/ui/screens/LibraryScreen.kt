@@ -62,6 +62,7 @@ import app.auralis.model.LibraryItem
 import app.auralis.ui.DateRangeFilter
 import app.auralis.ui.LibraryFilterState
 import app.auralis.ui.LibraryTab
+import app.auralis.ui.components.CreatorFooter
 import app.auralis.ui.theme.AuralisColors
 import app.auralis.ui.theme.AuralisMark
 import coil.compose.AsyncImage
@@ -313,6 +314,8 @@ fun LibraryScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = AuralisColors.TextMuted
                     )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    CreatorFooter()
                 }
             }
         } else {
@@ -329,6 +332,9 @@ fun LibraryScreen(
                         onToggleFavorite = { onToggleFavorite(item) },
                         onDelete = { onDeleteItem(item) }
                     )
+                }
+                item {
+                    CreatorFooter()
                 }
             }
         }

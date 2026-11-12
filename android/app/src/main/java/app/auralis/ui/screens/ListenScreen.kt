@@ -77,6 +77,7 @@ import app.auralis.audio.AudioCaptureMode
 import app.auralis.data.UserSettingsState
 import app.auralis.model.RecognitionState
 import app.auralis.ui.RecognitionUiState
+import app.auralis.ui.components.CreatorFooter
 import app.auralis.ui.theme.AuralisColors
 import app.auralis.ui.theme.AuralisMark
 import kotlin.math.max
@@ -416,6 +417,9 @@ fun ListenScreen(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            CreatorFooter()
         }
     }
 }
