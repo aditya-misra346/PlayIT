@@ -1,0 +1,135 @@
+#!/usr/bin/env node
+/**
+ * Auralis In-Depth End-to-End Multi-Platform Verification Suite (`scripts/e2e-verify.mjs`)
+ *
+ * Verifies:
+ *   1. Cross-platform version & manifest synchronization across Web/PWA, Server, Android, iOS, macOS, Windows, and Linux
+ *   2. Production build of Backend Server (`server/dist`) and Web/PWA (`web/dist`)
+ *   3. Server & Multi-Condition Acoustic Fingerprinting 16-test suite
+ *   4. iOS `AuralisCore` Swift Package 12-test suite (`swift test`)
+ *   5. Desktop Rust `src-tauri` 9-test DSP & capture suite (`cargo test`)
+ *   6. Live HTTP / Deployed URL end-to-end verification (HTML shell, PWA manifest, Service Worker, `/api/v1/version`,
+ *      `/api/v1/config`, `/api/v1/reference-tracks`, and live WAV acoustic recognition via `POST /api/v1/recognize`).
+ */
+import assert from 'node:assert/strict';
+import { execSync } from 'node:child_process';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const targetUrlArg = process.argv.find((a) => a.startsWith('--url='));
+const remoteBaseUrl = targetUrlArg ? targetUrlArg.slice('--url='.length).replace(/\/$/, '') : null;
+
+const env = {
+  ...process.env,
+  PATH: `${process.env.HOME}/.local/toolchains/node/bin:/Users/aditya/.gemini/antigravity/scratch/tools/node-v22.14.0-darwin-arm64/bin:${process.env.HOME}/.cargo/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH || ''}`,
+};
+
+function runStep(title, cmd) {
+  console.log(`\n━━━ [VERIFY] ${title} ━━━`);
+  execSync(cmd, { cwd: ROOT, stdio: 'inherit', env });
+}
+
+async function verifyEndpoints(baseUrl, expectedVersion) {
+  console.log(`\n━━━ [VERIFY] Live Endpoint & Recognition Check against ${baseUrl} ━━━`);
+
+  // 1. Web App HTML & PWA Manifest & Service Worker
+  const htmlRes = await fetch(`${baseUrl}/`);
+  assert.equal(htmlRes.status, 200, 'Expected HTTP 200 on /');
+  const html = await htmlRes.text();
+  assert.ok(html.includes('Auralis'), 'Expected Auralis title in index.html');
+
+  const manifestRes = await fetch(`${baseUrl}/manifest.webmanifest`);
+  assert.equal(manifestRes.status, 200, 'Expected HTTP 200 on /manifest.webmanifest');
+  const manifest = await manifestRes.json();
+  assert.equal(manifest.short_name, 'Auralis');
+
+  const swRes = await fetch(`${baseUrl}/sw.js`);
+  assert.equal(swRes.status, 200, 'Expected HTTP 200 on /sw.js');
+  const swText = await swRes.text();
+  assert.ok(swText.includes(`v${expectedVersion}`), `Expected Service Worker cache key to contain v${expectedVersion}`);
+
+  // 2. /api/v1/version
+  const verRes = await fetch(`${baseUrl}/api/v1/version`);
+  assert.equal(verRes.status, 200, 'Expected HTTP 200 on /api/v1/version');
+  const verJson = await verRes.json();
+  assert.equal(verJson.version, expectedVersion, 'Expected /api/v1/version to match version.json');
+  for (const plat of ['web', 'android', 'ios', 'macos', 'windows', 'linux']) {
+    assert.equal(verJson.platforms[plat].version, expectedVersion, `Platform ${plat} version mismatch`);
+  }
+
+  // 3. /api/v1/config
+  const cfgRes = await fetch(`${baseUrl}/api/v1/config`);
+  assert.equal(cfgRes.status, 200);
+  const cfgJson = await cfgRes.json();
+  assert.equal(cfgJson.version, expectedVersion);
+  assert.ok(Array.isArray(cfgJson.providers) && cfgJson.providers.length > 0);
+
+  // 4. /api/v1/reference-tracks & live WAV recognition via POST /api/v1/recognize
+  const refRes = await fetch(`${baseUrl}/api/v1/reference-tracks`);
+  assert.equal(refRes.status, 200);
+  const refJson = await refRes.json();
+  assert.ok(refJson.tracks.length >= 8);
+
+  const sampleTrack = refJson.tracks[0];
+  const wavRes = await fetch(`${baseUrl}${sampleTrack.audioUrl}?startSec=5&durationSec=8`);
+  assert.equal(wavRes.status, 200);
+  const wavBuf = new Uint8Array(await wavRes.arrayBuffer());
+
+  const form = new FormData();
+  form.set('source', 'microphone');
+  form.set('durationMs', '8000');
+  form.set('audio', new Blob([wavBuf], { type: 'audio/wav' }), 'sample.wav');
+
+  const recRes = await fetch(`${baseUrl}/api/v1/recognize`, {
+    method: 'POST',
+    headers: {
+      'X-Auralis-Client': `web/${expectedVersion}`,
+      'X-Auralis-Install': 'e2e-verification-suite',
+    },
+    body: form,
+  });
+  assert.equal(recRes.status, 200);
+  const recJson = await recRes.json();
+  assert.equal(recJson.status, 'match');
+  assert.equal(recJson.result.title, sampleTrack.title);
+  assert.equal(recJson.result.isrc, sampleTrack.isrc);
+  assert.ok(recJson.result.match.confidence.value >= 70);
+  console.log(
+    `✔ Live recognition succeeded on ${baseUrl}: "${recJson.result.title}" by ${recJson.result.artist} (offset=${recJson.result.match.timecode}, confidence=${recJson.result.match.confidence.value}/100, latency=${recJson.latencyMs}ms)`,
+  );
+}
+
+async function main() {
+  const versionManifest = JSON.parse(execSync('cat version.json', { cwd: ROOT, encoding: 'utf8' }));
+  const expectedVersion = versionManifest.version;
+
+  runStep('1. Cross-Platform Version Sync Check', 'node scripts/sync-platforms.mjs --check');
+  runStep('2. Build Server & Web/PWA', 'npm run build');
+  runStep('3. Server & Multi-Condition Acoustic Fingerprinting Tests (16 tests)', 'npm --prefix server test');
+  runStep('4. iOS/iPadOS AuralisCore Swift Package Tests (12 tests)', 'cd ios/AuralisCore && swift test');
+  runStep('5. Desktop Tauri Rust Audio & DSP Tests (9 tests)', 'cd desktop/src-tauri && cargo test');
+
+  if (remoteBaseUrl) {
+    await verifyEndpoints(remoteBaseUrl, expectedVersion);
+  } else {
+    const { createAuralisApp } = await import('../server/dist/app.js');
+    const { loadConfig } = await import('../server/dist/config.js');
+    const cfg = { ...loadConfig(), staticDir: join(ROOT, 'web/dist') };
+    const { server } = createAuralisApp(cfg);
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const port = server.address().port;
+    try {
+      await verifyEndpoints(`http://127.0.0.1:${port}`, expectedVersion);
+    } finally {
+      await new Promise((resolve) => server.close(resolve));
+    }
+  }
+
+  console.log(`\n✅ ALL CROSS-PLATFORM & END-TO-END VERIFICATION CHECKS PASSED (v${expectedVersion})!`);
+}
+
+main().catch((err) => {
+  console.error('\n❌ E2E Verification Failed:', err);
+  process.exit(1);
+});

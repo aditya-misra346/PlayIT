@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="auralisBg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B1220"/>
+      <stop offset="100%" stop-color="#060A14"/>
+    </linearGradient>
+    <linearGradient id="auralisAccent" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2F6BFF"/>
+      <stop offset="55%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#auralisBg)"/>
+  <circle cx="216" cy="256" r="68" fill="url(#auralisAccent)"/>
+  <path d="M292 182 A 104 104 0 0 1 292 330" stroke="url(#auralisAccent)" stroke-width="24" stroke-linecap="round"/>
+  <path d="M336 142 A 158 158 0 0 1 336 370" stroke="url(#auralisAccent)" stroke-width="22" stroke-linecap="round" stroke-opacity="0.78"/>
+  <path d="M380 104 A 212 212 0 0 1 380 408" stroke="url(#auralisAccent)" stroke-width="18" stroke-linecap="round" stroke-opacity="0.48"/>
+</svg>

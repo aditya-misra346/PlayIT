@@ -1,0 +1,5 @@
+#!/bin/sh
+# Automatically synchronize Web, PWA, Android, iOS, macOS, Windows, and Linux version manifests before every commit.
+export PATH="$HOME/.local/toolchains/node/bin:/Users/aditya/.gemini/antigravity/scratch/tools/node-v22.14.0-darwin-arm64/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+node scripts/sync-platforms.mjs
+git add version.json package.json server/package.json server/src/version.ts web/package.json web/src/version.ts web/public/sw.js desktop/src-tauri/tauri.conf.json desktop/src-tauri/Cargo.toml desktop/src-tauri/Info.plist android/app/build.gradle.kts ios/project.yml 2>/dev/null || true

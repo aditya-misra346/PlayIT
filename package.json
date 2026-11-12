@@ -1,0 +1,22 @@
+{
+  "name": "auralis-monorepo",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Auralis — Cross-Platform Acoustic Music Recognition Platform (Web, PWA, Android, iOS, macOS, Windows, Linux)",
+  "scripts": {
+    "dev:server": "npm --prefix server run dev",
+    "dev:web": "npm --prefix web run dev",
+    "build:server": "npm --prefix server run build",
+    "build:web": "npm --prefix web run build",
+    "build": "node scripts/sync-platforms.mjs && npm run build:server && npm run build:web",
+    "sync:platforms": "node scripts/sync-platforms.mjs",
+    "sync:check": "node scripts/sync-platforms.mjs --check",
+    "bump:patch": "node scripts/sync-platforms.mjs --bump patch",
+    "bump:minor": "node scripts/sync-platforms.mjs --bump minor",
+    "release:sync": "node scripts/auto-commit-sync.mjs",
+    "watch:autosync": "node scripts/auto-commit-sync.mjs --watch",
+    "test:server": "npm --prefix server test",
+    "test:e2e": "node scripts/e2e-verify.mjs",
+    "start": "STATIC_DIR=../web/dist node server/dist/index.js"
+  }
+}

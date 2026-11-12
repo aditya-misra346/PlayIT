@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DEBUG ONLY: allow cleartext HTTP so the app can reach a local dev server
+     (emulator host 10.0.2.2, localhost, or a LAN IP passed via -PauralisApiBase). -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

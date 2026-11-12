@@ -1,0 +1,15 @@
+{
+  "name": "@auralis/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Auralis native desktop client (Tauri 2)",
+  "scripts": {
+    "build:macos-helper": "bash ./scripts/build-macos-helper.sh",
+    "test:rust": "cargo test --manifest-path ./src-tauri/Cargo.toml",
+    "build:rust": "cargo build --manifest-path ./src-tauri/Cargo.toml",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.2.0"
+  }
+}

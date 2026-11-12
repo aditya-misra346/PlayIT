@@ -1,0 +1,115 @@
+name: Desktop Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-14
+            target: aarch64-apple-darwin
+            args: --target aarch64-apple-darwin
+          - platform: macos-14
+            target: x86_64-apple-darwin
+            args: --target x86_64-apple-darwin
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
+            args: --target x86_64-pc-windows-msvc
+          - platform: windows-latest
+            target: aarch64-pc-windows-msvc
+            args: --target aarch64-pc-windows-msvc
+          - platform: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            args: --target x86_64-unknown-linux-gnu
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Rust stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "./desktop/src-tauri -> target"
+
+      - name: Install Linux system dependencies (WebKitGTK, ALSA, PulseAudio)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libasound2-dev \
+            libpulse-dev \
+            pulseaudio-utils \
+            rpm
+
+      - name: Build macOS ScreenCaptureKit helper binary
+        if: startsWith(matrix.platform, 'macos')
+        working-directory: ./desktop
+        run: |
+          mkdir -p src-tauri/binaries
+          if [ "${{ matrix.target }}" = "aarch64-apple-darwin" ]; then
+            SWIFT_TARGET="arm64-apple-macos13.0"
+          else
+            SWIFT_TARGET="x86_64-apple-macos13.0"
+          fi
+          swiftc -O -parse-as-library \
+            -target "${SWIFT_TARGET}" \
+            -framework ScreenCaptureKit \
+            -framework CoreMedia \
+            -framework AVFoundation \
+            -framework Foundation \
+            macos-helper/screencapture_audio.swift \
+            -o "src-tauri/binaries/auralis-macos-audio-${{ matrix.target }}"
+          cp -f "src-tauri/binaries/auralis-macos-audio-${{ matrix.target }}" "src-tauri/binaries/auralis-macos-audio"
+
+      - name: Build Web frontend dist
+        run: |
+          if [ -f ./web/package.json ]; then
+            cd ./web
+            npm ci || npm install
+            npm run build
+          else
+            mkdir -p ./web/dist
+            cp -f ./desktop/placeholder-dist/index.html ./web/dist/index.html
+          fi
+
+      - name: Run Rust unit tests (DSP + capture contract)
+        working-directory: ./desktop/src-tauri
+        run: cargo test
+
+      - name: Build Tauri bundles (DMG/App, MSI/NSIS, AppImage/DEB/RPM)
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: ./desktop
+          tagName: v__VERSION__
+          releaseName: "Auralis Desktop v__VERSION__"
+          releaseBody: "Cross-platform native desktop builds for macOS (arm64/x64), Windows (x64/arm64), and Linux (AppImage/DEB/RPM)."
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}

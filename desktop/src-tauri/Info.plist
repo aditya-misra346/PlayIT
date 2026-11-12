@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Auralis captures a short ~10-second audio sample from your microphone when you click Identify to recognize the song playing around you.</string>
+  <key>NSScreenCaptureUsageDescription</key>
+  <string>Auralis uses ScreenCaptureKit system audio capture when you select System Audio mode so it can recognize music playing on your Mac.</string>
+</dict>
+</plist>

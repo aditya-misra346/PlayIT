@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "installCommand": "npm --prefix server install && npm --prefix web install",
+  "buildCommand": "npm --prefix server run build && npm --prefix web run build",
+  "outputDirectory": "web/dist",
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30,
+      "includeFiles": "server/dist/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/((?!api/|assets/|icon\\.svg|manifest\\.webmanifest|sw\\.js).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

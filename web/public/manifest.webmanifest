@@ -1,0 +1,19 @@
+{
+  "name": "Auralis — Music Recognition",
+  "short_name": "Auralis",
+  "description": "Hear it. Know it. Instant acoustic music recognition across Web, Mobile, and Desktop.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060A14",
+  "theme_color": "#060A14",
+  "orientation": "portrait-primary",
+  "categories": ["music", "entertainment", "utilities"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
