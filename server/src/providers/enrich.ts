@@ -5,7 +5,20 @@ function norm(s: string): string {
   return s
     .toLowerCase()
     .replace(/\(.*?\)|\[.*?\]/g, '')
+    .replace(/\s+-\s+.*?(versión|version|remix|edit|live|remaster).*$/i, '')
     .replace(/[^a-z0-9\u00c0-\u024f\u0900-\u097f]+/g, ' ')
+    .trim();
+}
+
+function isVariantOrRemixTitle(title: string): boolean {
+  return /\b(remix|versión|version|club edit|radio edit|latin remix|notd remix|on vacation version|lofi|flip)\b/i.test(title);
+}
+
+function cleanCanonicalTitle(title: string): string {
+  return title
+    .replace(/\(.*?(remix|versión|version|edit|feat\.).*?\)/gi, '')
+    .replace(/\[.*?(remix|versión|version|edit|feat\.).*?\]/gi, '')
+    .replace(/\s+-\s+.*?(versión|version|remix|edit).*$/i, '')
     .trim();
 }
 
@@ -34,7 +47,9 @@ export async function enrichTrackMetadata(track: TrackMatch, fetchImpl: typeof f
     if (ytm) enriched.links.push(ytm);
   }
 
-  if (enriched.artwork && enriched.previewUrl && enriched.album && enriched.releaseDate) {
+  const hasVariantSuffix = isVariantOrRemixTitle(enriched.title);
+
+  if (!hasVariantSuffix && enriched.artwork && enriched.previewUrl && enriched.album && enriched.releaseDate) {
     return enriched;
   }
 
@@ -80,19 +95,22 @@ export async function enrichTrackMetadata(track: TrackMatch, fetchImpl: typeof f
     }
   }
 
-  // Step 2: Official Apple iTunes Search API enrichment if artwork, previewUrl, or album is still missing
-  if ((!enriched.artwork || !enriched.previewUrl || !enriched.album) && !enriched.isrc?.startsWith('USARL')) {
+  // Step 2: Official Apple iTunes Search API enrichment if artwork, previewUrl, album is missing, or variant title needs canonical studio resolution
+  if ((hasVariantSuffix || !enriched.artwork || !enriched.previewUrl || !enriched.album) && !enriched.isrc?.startsWith('USARL')) {
     try {
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 2200);
-      const itunesUrl = `https://itunes.apple.com/search?term=${searchQ}&media=music&limit=5`;
+      const baseTitle = hasVariantSuffix ? cleanCanonicalTitle(enriched.title) : enriched.title;
+      const primaryArtist = (enriched.artists[0] ?? enriched.artist).split(',')[0].trim();
+      const itunesTerm = encodeURIComponent(`${baseTitle} ${primaryArtist}`.trim());
+      const itunesUrl = `https://itunes.apple.com/search?term=${itunesTerm}&media=music&limit=10`;
       const res = await fetchImpl(itunesUrl, { signal: ctrl.signal });
       clearTimeout(timer);
       if (res.ok) {
         const data: any = await res.json();
-        const targetTitle = norm(enriched.title);
-        const targetArtist = norm(enriched.artists[0] ?? enriched.artist);
-        const match = (data?.results ?? []).find((r: any) => {
+        const targetTitle = norm(baseTitle);
+        const targetArtist = norm(primaryArtist);
+        const candidates = (data?.results ?? []).filter((r: any) => {
           if (r.kind !== 'song') return false;
           const rTitle = norm(String(r.trackName ?? ''));
           const rArtist = norm(String(r.artistName ?? ''));
@@ -100,6 +118,10 @@ export async function enrichTrackMetadata(track: TrackMatch, fetchImpl: typeof f
           const artistOk = rArtist.includes(targetArtist) || targetArtist.includes(rArtist);
           return titleOk && artistOk;
         });
+        const studioMatch = candidates.find(
+          (r: any) => !isVariantOrRemixTitle(`${r.trackName ?? ''} ${r.collectionName ?? ''}`),
+        );
+        const match = studioMatch ?? candidates[0];
 
         if (match) {
           const art100 = str(match.artworkUrl100);
@@ -107,6 +129,10 @@ export async function enrichTrackMetadata(track: TrackMatch, fetchImpl: typeof f
           const thumb300 = safeMediaUrl(art100 ? art100.replace('100x100bb', '300x300bb') : null);
           const preview = safeMediaUrl(match.previewUrl);
           const amUrl = safeMediaUrl(match.trackViewUrl);
+
+          const canonicalTitle = hasVariantSuffix && studioMatch ? (str(match.trackName) ?? enriched.title) : enriched.title;
+          const canonicalArtist = hasVariantSuffix && studioMatch ? (str(match.artistName) ?? enriched.artist) : enriched.artist;
+          const canonicalSearchQ = encodeURIComponent(`${canonicalTitle} ${canonicalArtist}`.trim());
 
           if (amUrl) {
             const idx = enriched.links.findIndex((l) => l.service === 'apple_music');
@@ -116,12 +142,26 @@ export async function enrichTrackMetadata(track: TrackMatch, fetchImpl: typeof f
               else enriched.links.push(amLink);
             }
           }
+          if (hasVariantSuffix && studioMatch) {
+            const spIdx = enriched.links.findIndex((l) => l.service === 'spotify');
+            const spLink = link('spotify', `https://open.spotify.com/search/${canonicalSearchQ}`);
+            if (spLink && spIdx >= 0) enriched.links[spIdx] = spLink;
+            const ytIdx = enriched.links.findIndex((l) => l.service === 'youtube_music');
+            const ytLink = link('youtube_music', `https://music.youtube.com/search?q=${canonicalSearchQ}`);
+            if (ytLink && ytIdx >= 0) enriched.links[ytIdx] = ytLink;
+          }
 
           enriched = {
             ...enriched,
-            album: enriched.album ?? str(match.collectionName),
+            title: canonicalTitle,
+            artist: canonicalArtist,
+            artists: hasVariantSuffix && studioMatch ? [canonicalArtist] : enriched.artists,
+            album: (hasVariantSuffix && studioMatch ? str(match.collectionName) : null) ?? enriched.album ?? str(match.collectionName),
             releaseDate: enriched.releaseDate ?? (str(match.releaseDate)?.slice(0, 10) ?? null),
             artwork:
+              (hasVariantSuffix && studioMatch && art1000
+                ? { url: art1000, thumbUrl: thumb300 ?? art1000, width: 1000, height: 1000 }
+                : null) ??
               enriched.artwork ??
               (art1000 ? { url: art1000, thumbUrl: thumb300 ?? art1000, width: 1000, height: 1000 } : null),
             previewUrl: enriched.previewUrl ?? preview,

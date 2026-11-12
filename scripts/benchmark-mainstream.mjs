@@ -15,6 +15,7 @@ import { decodeWav, encodeWav16 } from '../server/dist/audio/wav.js';
 import { loadConfig } from '../server/dist/config.js';
 import { ACRCloudProvider } from '../server/dist/providers/acrcloud.js';
 import { AudDProvider } from '../server/dist/providers/audd.js';
+import { enrichTrackMetadata } from '../server/dist/providers/enrich.js';
 import { LocalCatalogProvider } from '../server/dist/providers/local.js';
 import { RecognitionOrchestrator } from '../server/dist/providers/orchestrator.js';
 
@@ -263,10 +264,13 @@ async function main() {
     );
   }
 
-  // Also test Live AudD Cloud Provider directly (`provider: 'audd'`) on 3 distinct mainstream tracks (Pop, Rock, Hip-Hop)
+  // Also test Live AudD Cloud Provider directly (`provider: 'audd'`) + iTunes Canonical Enrichment on key tracks
   console.log('\n━━━ LIVE AUDD COMMERCIAL API DIRECT VERIFICATION (https://api.audd.io/) ━━━');
   const auddDirectResults = [];
-  for (const idx of [0, 3, 7]) {
+  const auddTestTitles = ['Shape of You', 'Despacito', 'Loser', 'Reflections', 'Anti-Hero', "God's Plan", 'Bohemian Rhapsody'];
+  for (const targetTitle of auddTestTitles) {
+    const idx = items.findIndex((it) => it.meta.title === targetTitle);
+    if (idx < 0) continue;
     const { meta, fixtureWav } = items[idx];
     const decoded = decodeWav(new Uint8Array(readFileSync(fixtureWav)));
     const slice = slicePcm(decoded.mono, 6.0, 8.0, decoded.sampleRate);
@@ -278,16 +282,18 @@ async function main() {
         { source: 'microphone', platform: 'web', durationMs: 8000, requestId: `audd-live-${idx}` },
         new AbortController().signal,
       );
+      const enriched = out.status === 'match' ? await enrichTrackMetadata(out.result) : null;
       const lat = Date.now() - t0;
       auddDirectResults.push({
         expected: `${meta.title} — ${meta.artists[0]}`,
         status: out.status,
-        matched: out.status === 'match' ? `${out.result.title} — ${out.result.artist}` : null,
-        isrc: out.status === 'match' ? out.result.isrc : null,
+        matched: enriched ? `${enriched.title} — ${enriched.artist}` : null,
+        album: enriched ? enriched.album : null,
+        isrc: enriched ? enriched.isrc : null,
         latencyMs: lat,
       });
       console.log(
-        `✔ AudD Cloud API Direct: "${meta.title}" -> status=${out.status}, matched="${out.status === 'match' ? `${out.result.title} — ${out.result.artist}` : 'none'}", latency=${lat}ms`,
+        `✔ AudD Cloud API Direct: "${meta.title}" -> status=${out.status}, matched="${enriched ? `${enriched.title} — ${enriched.artist} (${enriched.album})` : 'none'}", latency=${lat}ms`,
       );
     } catch (err) {
       auddDirectResults.push({

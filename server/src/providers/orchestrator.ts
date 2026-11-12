@@ -254,6 +254,7 @@ export class RecognitionOrchestrator {
 
     let lastError: unknown = null;
     let lastProvider = chain[0];
+    let cleanNoMatchProvider: RecognitionProvider | null = null;
 
     for (let idx = 0; idx < chain.length; idx++) {
       const provider = chain[idx];
@@ -296,6 +297,8 @@ export class RecognitionOrchestrator {
           };
         }
 
+        cleanNoMatchProvider = provider;
+
         // If no_match: only try next provider if `fallbackOnNoMatch` is true OR the next provider is free (`costPerRequestUsd === 0`)
         const nextProvider = chain[idx + 1];
         if (nextProvider && (this.opts.fallbackOnNoMatch || nextProvider.costPerRequestUsd === 0)) {
@@ -316,16 +319,26 @@ export class RecognitionOrchestrator {
         if (isProviderFailure(err) && idx + 1 < chain.length) {
           continue;
         }
+        if (isProviderFailure(err) && cleanNoMatchProvider && !requestedProvider) {
+          return {
+            status: 'no_match',
+            requestId: ctx.requestId,
+            latencyMs: Date.now() - startMs,
+            provider: { id: cleanNoMatchProvider.id, name: cleanNoMatchProvider.name },
+            audioMetrics: enrichedMetrics,
+          };
+        }
         throw err;
       }
     }
 
-    if (lastError instanceof ApiError) throw lastError;
+    if (lastError instanceof ApiError && !cleanNoMatchProvider) throw lastError;
+    const finalProvider = cleanNoMatchProvider ?? lastProvider;
     return {
       status: 'no_match',
       requestId: ctx.requestId,
       latencyMs: Date.now() - startMs,
-      provider: { id: lastProvider.id, name: lastProvider.name },
+      provider: { id: finalProvider.id, name: finalProvider.name },
       audioMetrics: enrichedMetrics,
     };
   }

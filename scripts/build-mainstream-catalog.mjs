@@ -23,6 +23,7 @@ const OUTPUT_JSON = join(ROOT, 'server/src/fingerprint/mainstreamCatalog.json');
 mkdirSync(FIXTURE_DIR, { recursive: true });
 
 const QUERIES = [
+  // Original 27 benchmark tracks across all 13 genres
   { genre: 'Pop', query: 'Taylor Swift Anti-Hero', country: 'US' },
   { genre: 'Pop', query: 'Dua Lipa Levitating', country: 'US' },
   { genre: 'Pop', query: 'Billie Eilish Birds of a Feather', country: 'US' },
@@ -50,9 +51,42 @@ const QUERIES = [
   { genre: 'Instrumental', query: 'Miles Davis So What', country: 'US' },
   { genre: 'Acoustic', query: 'Ed Sheeran Thinking Out Loud', country: 'US' },
   { genre: 'Acoustic', query: 'John Mayer Slow Dancing in a Burning Room', country: 'US' },
+
+  // 23 additional iconic popular tracks requested for in-depth cross-platform testing
+  { genre: 'Pop', query: 'Ed Sheeran Shape of You', trackId: 1193701392, country: 'US' },
+  { genre: 'Latin Pop', query: 'Luis Fonsi Daddy Yankee Despacito', trackId: 1447401620, country: 'US' },
+  { genre: 'Alternative', query: 'Tame Impala Loser', trackId: 1842957386, country: 'US' },
+  { genre: 'Alternative', query: 'Tame Impala New Person Same Old Mistakes', trackId: 1440838708, country: 'US' },
+  { genre: 'Alternative', query: 'Tame Impala Borderline', trackId: 1497230972, country: 'US' },
+  { genre: 'Alternative', query: 'The Neighbourhood Reflections', trackId: 1440532773, country: 'US' },
+  { genre: 'Alternative', query: 'The Neighbourhood Sweater Weather', trackId: 635016640, country: 'US' },
+  { genre: 'Alternative', query: 'The Neighbourhood Softcore', trackId: 1440532753, country: 'US' },
+  { genre: 'Pop', query: 'The Weeknd Blinding Lights', trackId: 1499378607, country: 'US' },
+  { genre: 'Alternative', query: 'Glass Animals Heat Waves', trackId: 1508562516, country: 'US' },
+  { genre: 'Pop', query: 'Harry Styles As It Was', trackId: 1615585008, country: 'US' },
+  { genre: 'Rock', query: 'Imagine Dragons Believer', trackId: 1411628233, country: 'US' },
+  { genre: 'Hip-Hop', query: 'Post Malone Swae Lee Sunflower', trackId: 1445949267, country: 'US' },
+  { genre: 'Pop', query: 'Billie Eilish bad guy', trackId: 1450695739, country: 'US' },
+  { genre: 'Pop', query: 'Lewis Capaldi Someone You Loved', trackId: 1452619054, country: 'US' },
+  { genre: 'Pop', query: 'OneRepublic Counting Stars', trackId: 1471704175, country: 'US' },
+  { genre: 'Alternative', query: 'Vance Joy Riptide', trackId: 1022164261, country: 'US' },
+  { genre: 'Rock', query: 'Arctic Monkeys Do I Wanna Know', trackId: 663097965, country: 'US' },
+  { genre: 'Alternative', query: 'Hozier Take Me to Church', trackId: 900672609, country: 'US' },
+  { genre: 'Pop', query: 'Lady Gaga Bruno Mars Die With A Smile', trackId: 1762656732, country: 'US' },
+  { genre: 'Pop', query: 'Sabrina Carpenter Espresso', trackId: 1752214923, country: 'US' },
+  { genre: 'Pop', query: 'Taylor Swift Cruel Summer', trackId: 1468058171, country: 'US' },
+  { genre: 'Rock', query: 'Coldplay Viva La Vida', trackId: 1122773680, country: 'US' },
 ];
 
-async function searchItunesTrack(query) {
+async function searchItunesTrack(query, trackId) {
+  if (trackId) {
+    const lookupRes = await fetch(`https://itunes.apple.com/lookup?id=${trackId}`);
+    if (lookupRes.ok) {
+      const lookupData = await lookupRes.json();
+      const exact = (lookupData.results ?? []).find((r) => r.kind === 'song' && r.previewUrl && r.trackName && r.artistName);
+      if (exact) return exact;
+    }
+  }
   const url = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=10`;
   const res = await fetch(url);
   if (!res.ok) return null;
@@ -60,7 +94,7 @@ async function searchItunesTrack(query) {
   if (!Array.isArray(data.results) || data.results.length === 0) return null;
   const valid = data.results.filter((r) => r.kind === 'song' && r.previewUrl && r.trackName && r.artistName);
   const studio = valid.find(
-    (r) => !/\b(live|lofi|lo-fi|flip|remix|karaoke|cover|tribute|instrumental version)\b/i.test(`${r.trackName} ${r.collectionName ?? ''}`),
+    (r) => !/\b(live|lofi|lo-fi|flip|remix|karaoke|cover|tribute|instrumental version|on vacation version|slowed)\b/i.test(`${r.trackName} ${r.collectionName ?? ''}`),
   );
   return studio ?? valid[0] ?? null;
 }
@@ -71,7 +105,7 @@ async function main() {
 
   for (const item of QUERIES) {
     try {
-      const hit = await searchItunesTrack(item.query, item.country);
+      const hit = await searchItunesTrack(item.query, item.trackId);
       if (!hit) {
         console.warn(`[WARN] No iTunes preview found for "${item.query}"`);
         continue;

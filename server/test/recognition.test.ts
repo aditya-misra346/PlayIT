@@ -209,10 +209,10 @@ describe('2. Multi-Condition Acoustic Fingerprinting Accuracy Suite', () => {
     assert.equal(catalog.match(unrelated, FP_SAMPLE_RATE, 20), null);
   });
 
-  it('loads all 27 mainstream commercial tracks across all 13 genres alongside the 8 studio reference tracks', () => {
+  it('loads all 50 mainstream commercial tracks across all 13 genres alongside the 8 studio reference tracks', () => {
     const mainstream = getMainstreamCatalogTracks();
-    assert.equal(mainstream.length, 27);
-    assert.equal(catalog.size, 35);
+    assert.equal(mainstream.length, 50);
+    assert.equal(catalog.size, 58);
     const requiredGenres = [
       'Pop',
       'Hip-Hop',
@@ -232,6 +232,13 @@ describe('2. Multi-Condition Acoustic Fingerprinting Accuracy Suite', () => {
       assert.ok(
         mainstream.some((t) => t.genres.includes(g)),
         `Expected mainstream catalog to include genre "${g}"`,
+      );
+    }
+    const mustInclude = ['Shape of You', 'Despacito', 'Loser', 'Reflections', 'Anti-Hero', 'Bohemian Rhapsody'];
+    for (const title of mustInclude) {
+      assert.ok(
+        mainstream.some((t) => t.title === title),
+        `Expected mainstream catalog to include "${title}"`,
       );
     }
   });

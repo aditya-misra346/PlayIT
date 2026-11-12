@@ -22,7 +22,9 @@ const remoteBaseUrl = targetUrlArg ? targetUrlArg.slice('--url='.length).replace
 
 const env = {
   ...process.env,
-  PATH: `${process.env.HOME}/.local/toolchains/node/bin:/Users/aditya/.gemini/antigravity/scratch/tools/node-v22.14.0-darwin-arm64/bin:${process.env.HOME}/.cargo/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH || ''}`,
+  JAVA_HOME: '/Users/aditya/.local/toolchains/jdk17',
+  ANDROID_HOME: '/Users/aditya/.local/toolchains/android-sdk',
+  PATH: `/Users/aditya/.local/toolchains/jdk17/bin:${process.env.HOME}/.local/toolchains/node/bin:/Users/aditya/.gemini/antigravity/scratch/tools/node-v22.14.0-darwin-arm64/bin:${process.env.HOME}/.cargo/bin:/usr/local/bin:/usr/bin:/bin:${process.env.PATH || ''}`,
 };
 
 function runStep(title, cmd) {
@@ -69,7 +71,7 @@ async function verifyEndpoints(baseUrl, expectedVersion) {
   const refRes = await fetch(`${baseUrl}/api/v1/reference-tracks`);
   assert.equal(refRes.status, 200);
   const refJson = await refRes.json();
-  assert.ok(refJson.tracks.length >= 35, `Expected >= 35 tracks (27 mainstream + 8 studio), got ${refJson.tracks.length}`);
+  assert.ok(refJson.tracks.length >= 58, `Expected >= 58 tracks (50 mainstream + 8 studio), got ${refJson.tracks.length}`);
 
   const sampleTrack = refJson.tracks.find((t) => t.category === 'studio') ?? refJson.tracks[refJson.tracks.length - 1];
   const wavRes = await fetch(`${baseUrl}${sampleTrack.audioUrl}?startSec=5&durationSec=8`);
@@ -110,8 +112,52 @@ async function verifyEndpoints(baseUrl, expectedVersion) {
   assert.equal(recJson.result.isrc, sampleTrack.isrc);
   assert.ok(recJson.result.match.confidence.value >= 70);
   console.log(
-    `✔ Live recognition succeeded on ${baseUrl}: "${recJson.result.title}" by ${recJson.result.artist} (offset=${recJson.result.match.timecode}, confidence=${recJson.result.match.confidence.value}/100, latency=${recJson.latencyMs}ms)`,
+    `✔ Live studio recognition succeeded on ${baseUrl}: "${recJson.result.title}" by ${recJson.result.artist} (offset=${recJson.result.match.timecode}, confidence=${recJson.result.match.confidence.value}/100, latency=${recJson.latencyMs}ms)`,
   );
+
+  // 5. Verify Popular Mainstream Songs across all 6 platform client profiles (Android, iOS, macOS, Windows, Linux, Web)
+  const { existsSync, readFileSync } = await import('node:fs');
+  const { decodeWav, encodeWav16 } = await import('../server/dist/audio/wav.js');
+  const mainstreamChecks = [
+    { trackId: 1193701392, title: 'Shape of You', artist: 'Ed Sheeran', platform: 'android', source: 'microphone', startSec: 6 },
+    { trackId: 1447401620, title: 'Despacito', artist: 'Luis Fonsi & Daddy Yankee', platform: 'ios', source: 'microphone', startSec: 8 },
+    { trackId: 1842957386, title: 'Loser', artist: 'Tame Impala', platform: 'macos', source: 'system', startSec: 5 },
+    { trackId: 1440532773, title: 'Reflections', artist: 'The Neighbourhood', platform: 'windows', source: 'system', startSec: 10 },
+    { trackId: 635016640, title: 'Sweater Weather', artist: 'The Neighbourhood', platform: 'linux', source: 'system', startSec: 12 },
+    { trackId: 1499378607, title: 'Blinding Lights', artist: 'The Weeknd', platform: 'web', source: 'microphone', startSec: 7 },
+  ];
+
+  for (const check of mainstreamChecks) {
+    const fixturePath = `/tmp/auralis-mainstream-fixtures/${check.trackId}.wav`;
+    if (!existsSync(fixturePath)) continue;
+    const decoded = decodeWav(new Uint8Array(readFileSync(fixturePath)));
+    const startSample = check.startSec * decoded.sampleRate;
+    const endSample = (check.startSec + 8) * decoded.sampleRate;
+    const clipWav = encodeWav16(decoded.mono.subarray(startSample, endSample), decoded.sampleRate);
+
+    const mForm = new FormData();
+    mForm.set('source', check.source);
+    mForm.set('platform', check.platform);
+    mForm.set('durationMs', '8000');
+    mForm.set('audio', new Blob([clipWav], { type: 'audio/wav' }), 'sample.wav');
+
+    const mRes = await fetch(`${baseUrl}/api/v1/recognize`, {
+      method: 'POST',
+      headers: {
+        'X-Auralis-Client': `${check.platform}/${expectedVersion}`,
+        'X-Auralis-Install': `e2e-${check.platform}`,
+      },
+      body: mForm,
+    });
+    assert.equal(mRes.status, 200);
+    const mJson = await mRes.json();
+    assert.equal(mJson.status, 'match', `Expected match for ${check.title} on ${check.platform}`);
+    assert.equal(mJson.result.title, check.title);
+    assert.equal(mJson.result.artist, check.artist);
+    console.log(
+      `✔ [${check.platform.toUpperCase()} / ${check.source}] Recognized "${mJson.result.title}" — ${mJson.result.artist} (album="${mJson.result.album}", offset=${mJson.result.match.timecode}, hashes=${mJson.audioMetrics?.fingerprintHashCount}, latency=${mJson.latencyMs}ms)`,
+    );
+  }
 }
 
 async function main() {
@@ -120,9 +166,10 @@ async function main() {
 
   runStep('1. Cross-Platform Version Sync Check', 'node scripts/sync-platforms.mjs --check');
   runStep('2. Build Server & Web/PWA', 'npm run build');
-  runStep('3. Server & Multi-Condition Acoustic Fingerprinting Tests (16 tests)', 'npm --prefix server test');
-  runStep('4. iOS/iPadOS AuralisCore Swift Package Tests (12 tests)', 'cd ios/AuralisCore && swift test');
-  runStep('5. Desktop Tauri Rust Audio & DSP Tests (9 tests)', 'cd desktop/src-tauri && cargo test');
+  runStep('3. Server & Multi-Condition Acoustic Fingerprinting Tests (17 tests)', 'npm --prefix server test');
+  runStep('4. Android Kotlin Compose Unit Tests & APK Build (12 tests)', 'cd android && ./gradlew testDebugUnitTest assembleDebug --console=plain');
+  runStep('5. iOS/iPadOS AuralisCore Swift Package Tests (12 tests)', 'cd ios/AuralisCore && swift test');
+  runStep('6. Desktop Tauri Rust Audio & DSP Tests (9 tests)', 'cd desktop/src-tauri && cargo test');
 
   if (remoteBaseUrl) {
     await verifyEndpoints(remoteBaseUrl, expectedVersion);

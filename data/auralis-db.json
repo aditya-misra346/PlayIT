@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "users": {},
+  "libraries": {},
+  "usage": {
+    "2026-11-12": {
+      "date": "2026-11-12",
+      "totalRequests": 7,
+      "paidRequests": 0,
+      "estimatedCostUsd": 0,
+      "byProvider": {
+        "local": {
+          "match": 7,
+          "no_match": 0,
+          "error": 0,
+          "costUsd": 0,
+          "avgLatencyMs": 17
+        }
+      }
+    }
+  }
+}
