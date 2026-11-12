@@ -5,7 +5,7 @@ import { extname, join, normalize } from 'node:path';
 import { encodeWav16 } from './audio/wav.js';
 import type { AppConfig } from './config.js';
 import { ApiError } from './errors.js';
-import { REFERENCE_SONGS, synthesizeReferenceSong } from './fingerprint/referenceCatalog.js';
+import { getMainstreamCatalogTracks, REFERENCE_SONGS, synthesizeReferenceSong } from './fingerprint/referenceCatalog.js';
 import { ACRCloudProvider } from './providers/acrcloud.js';
 import { AudDProvider } from './providers/audd.js';
 import { LocalCatalogProvider } from './providers/local.js';
@@ -277,6 +277,14 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
         return;
       }
 
+      // 2b. Audio Diagnostic Verification Endpoint (Phase 3)
+      if (req.method === 'POST' && path === '/api/v1/diagnostics/audio') {
+        const { wav } = await parseRecognizeInput(req);
+        const report = orchestrator.inspectAudio(wav);
+        sendJson(res, 200, report);
+        return;
+      }
+
       // 3. ShazamKit Developer Token endpoint (for Android / Web / iOS clients when configured)
       if (req.method === 'GET' && path === '/api/v1/shazamkit/token') {
         const user = getAuthUser(req);
@@ -286,23 +294,48 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
         return;
       }
 
-      // 4. Reference Catalog & Audio Streaming (for real speaker-to-mic & automated accuracy testing)
+      // 4. Reference & Mainstream Catalog Streaming (for real speaker-to-mic & automated accuracy testing)
       if (req.method === 'GET' && path === '/api/v1/reference-tracks') {
+        const mainstreamTracks = getMainstreamCatalogTracks().map((m) => ({
+          ...m,
+          category: 'mainstream' as const,
+          bpm: 120,
+          timbre: 'commercial',
+          hasVocalsFormant: true,
+          audioUrl: `/api/v1/reference-tracks/${encodeURIComponent(m.id)}/audio.wav`,
+        }));
+        const studioTracks = REFERENCE_SONGS.map((s) => ({
+          ...s.meta,
+          category: 'studio' as const,
+          bpm: s.bpm,
+          timbre: s.timbre,
+          hasVocalsFormant: s.hasVocalsFormant,
+          audioUrl: `/api/v1/reference-tracks/${encodeURIComponent(s.meta.id)}/audio.wav`,
+        }));
         sendJson(res, 200, {
-          tracks: REFERENCE_SONGS.map((s) => ({
-            ...s.meta,
-            bpm: s.bpm,
-            timbre: s.timbre,
-            hasVocalsFormant: s.hasVocalsFormant,
-            audioUrl: `/api/v1/reference-tracks/${encodeURIComponent(s.meta.id)}/audio.wav`,
-          })),
+          tracks: [...mainstreamTracks, ...studioTracks],
         });
         return;
       }
 
-      const refAudioMatch = path.match(/^\/api\/v1\/reference-tracks\/([^/]+)\/audio\.wav$/);
+      const refAudioMatch = path.match(/^\/api\/v1\/reference-tracks\/([^/]+)\/audio(?:\.wav)?$/);
       if (req.method === 'GET' && refAudioMatch) {
         const trackId = decodeURIComponent(refAudioMatch[1]);
+        const mainstreamHit = getMainstreamCatalogTracks().find((m) => m.id === trackId || m.isrc === trackId);
+        if (mainstreamHit && mainstreamHit.previewUrl) {
+          const upstream = await fetchImpl(mainstreamHit.previewUrl);
+          if (!upstream.ok) {
+            throw new ApiError('PROVIDER_UNAVAILABLE', `Failed to stream preview for "${mainstreamHit.title}".`);
+          }
+          const ab = await upstream.arrayBuffer();
+          res.writeHead(200, {
+            'Content-Type': upstream.headers.get('content-type') || 'audio/mp4',
+            'Content-Length': String(ab.byteLength),
+            'Cache-Control': 'public, max-age=3600',
+          });
+          res.end(Buffer.from(ab));
+          return;
+        }
         const spec = REFERENCE_SONGS.find((s) => s.meta.id === trackId || s.meta.isrc === trackId);
         if (!spec) throw new ApiError('NOT_FOUND', `Reference track "${trackId}" not found.`);
         const startSec = Math.max(0, Math.min(18, Number(url.searchParams.get('startSec')) || 0));

@@ -269,6 +269,15 @@ export function App() {
           durationMs: metrics.durationMs,
           signal: abortCtrl.signal,
         });
+        if (res.audioMetrics) {
+          const serverMetrics = res.audioMetrics;
+          setLastMetrics((prev) => ({
+            ...metrics,
+            ...prev,
+            ...serverMetrics,
+            byteLength: serverMetrics.byteLength ?? wavBytes.byteLength,
+          }));
+        }
 
         if (res.status === 'match' && res.result) {
           setCurrentMatch(res.result);
@@ -454,7 +463,11 @@ export function App() {
         const decoded = await audioCtx.decodeAudioData(ab.slice(0));
         await audioCtx.close();
 
-        const raw = decoded.getChannelData(0);
+        const fullChannel = decoded.getChannelData(0);
+        const raw =
+          fullChannel.length > 12 * 16000
+            ? fullChannel.subarray(4 * 16000, 12 * 16000)
+            : fullChannel;
         const modified = new Float32Array(raw.length);
 
         if (condition === 'clean') {
@@ -889,6 +902,84 @@ export function App() {
                 {serverConfig?.disclosure ??
                   'A short ~10-second audio sample is processed to identify the song and immediately discarded. Auralis never records in the background.'}
               </p>
+
+              {/* Phase 3 Diagnostic Audio-Analysis Layer */}
+              {(isListening || lastMetrics) && (
+                <div
+                  style={{
+                    marginTop: '18px',
+                    padding: '14px 16px',
+                    borderRadius: '14px',
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-line)',
+                    textAlign: 'left',
+                    width: '100%',
+                  }}
+                  aria-label="Audio Signal Diagnostics"
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                      flexWrap: 'wrap',
+                      gap: '8px',
+                    }}
+                  >
+                    <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>
+                      Audio Capture & Fingerprint Diagnostics
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      Source: {captureMode === 'system' ? 'System / Tab Audio Loopback' : 'Microphone Input'} · 16,000 Hz Mono PCM16 WAV
+                    </span>
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                      gap: '8px',
+                      fontSize: '0.77rem',
+                    }}
+                  >
+                    <div style={{ padding: '7px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)' }}>
+                      <div style={{ color: 'var(--text-muted)' }}>Input Status</div>
+                      <div style={{ fontWeight: 700, color: '#14b8a6' }}>
+                        {isListening
+                          ? `Active (${captureMode === 'system' ? 'System Audio' : 'Microphone'})`
+                          : 'Sample Captured'}
+                      </div>
+                    </div>
+                    <div style={{ padding: '7px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)' }}>
+                      <div style={{ color: 'var(--text-muted)' }}>RMS / Peak Level</div>
+                      <div style={{ fontWeight: 700 }}>
+                        {isListening
+                          ? `${liveLevel.rmsDbfs > -100 ? liveLevel.rmsDbfs.toFixed(1) : '-120.0'} dBFS`
+                          : `${lastMetrics?.rmsDbfs.toFixed(1)} dBFS (Peak ${((lastMetrics?.peak ?? 0) * 100).toFixed(0)}%)`}
+                      </div>
+                    </div>
+                    <div style={{ padding: '7px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)' }}>
+                      <div style={{ color: 'var(--text-muted)' }}>Silence / Clipping</div>
+                      <div style={{ fontWeight: 700 }}>
+                        {lastMetrics
+                          ? `${Math.round(lastMetrics.silenceRatio * 100)}% silence · ${(lastMetrics.clippingRatio * 100).toFixed(1)}% clip`
+                          : liveLevel.rmsDbfs > -50
+                            ? 'Musical Signal Detected'
+                            : 'Waiting for signal...'}
+                      </div>
+                    </div>
+                    <div style={{ padding: '7px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)' }}>
+                      <div style={{ color: 'var(--text-muted)' }}>Duration & Fingerprint</div>
+                      <div style={{ fontWeight: 700 }}>
+                        {lastMetrics
+                          ? `${(lastMetrics.durationMs / 1000).toFixed(1)}s${lastMetrics.fingerprintHashCount ? ` · ${lastMetrics.fingerprintHashCount} hashes` : ''}`
+                          : `${(liveLevel.elapsedMs / 1000).toFixed(1)}s elapsed`}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* Exceptional Song Identification Results Card */}

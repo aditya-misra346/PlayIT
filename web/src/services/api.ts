@@ -1,4 +1,4 @@
-import type { CaptureSource, LibraryItem, ProviderId, ReferenceTrack, ServerConfig, TrackMatch } from '../types';
+import type { AudioMetrics, CaptureSource, LibraryItem, ProviderId, ReferenceTrack, ServerConfig, TrackMatch } from '../types';
 import { isTauriDesktop } from '../audio/capture';
 import { getApiBaseUrl, getAuthToken, getInstallId } from './storage';
 
@@ -75,6 +75,7 @@ export interface RecognizeApiResult {
   latencyMs: number;
   provider: { id: ProviderId; name: string };
   result?: TrackMatch;
+  audioMetrics?: AudioMetrics;
 }
 
 export async function submitRecognitionSample(opts: {

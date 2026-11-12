@@ -1,12 +1,12 @@
 {
   "name": "@auralis/server",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && cp src/fingerprint/mainstreamCatalog.json dist/fingerprint/mainstreamCatalog.json",
     "test": "node --import tsx --test test/recognition.test.ts"
   },
   "devDependencies": {

@@ -65,7 +65,7 @@ public enum AuralisClientError: Error, LocalizedError, Equatable, Sendable {
 
 public final class AuralisAPIClient: @unchecked Sendable {
     public static let installIdUserDefaultsKey = "com.auralis.ios.install_uuid"
-    public static let defaultBaseURLString = "http://localhost:8787"
+    public static let defaultBaseURLString = "https://auralis-eight-kohl.vercel.app"
 
     private let lock = NSLock()
     private var _baseURL: URL

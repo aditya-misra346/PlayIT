@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { FP_SAMPLE_RATE, generateFingerprints, AcousticCatalogIndex, type CatalogTrackMeta } from './engine.js';
 export { FP_SAMPLE_RATE };
 
@@ -310,6 +313,34 @@ export function synthesizeReferenceSong(spec: ReferenceSongSpec, durationSec = 2
 }
 
 let cachedDefaultCatalog: AcousticCatalogIndex | null = null;
+let cachedMainstreamTracks: CatalogTrackMeta[] | null = null;
+
+function loadBundledMainstreamCatalog(): Array<{ meta: CatalogTrackMeta; hashes: Array<[number, number]> }> {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    join(here, 'mainstreamCatalog.json'),
+    join(here, '../../src/fingerprint/mainstreamCatalog.json'),
+  ];
+  for (const p of candidates) {
+    if (existsSync(p)) {
+      try {
+        const parsed = JSON.parse(readFileSync(p, 'utf8'));
+        if (Array.isArray(parsed?.tracks)) {
+          return parsed.tracks;
+        }
+      } catch {
+        // Ignore malformed JSON
+      }
+    }
+  }
+  return [];
+}
+
+export function getMainstreamCatalogTracks(): CatalogTrackMeta[] {
+  if (cachedMainstreamTracks) return cachedMainstreamTracks;
+  cachedMainstreamTracks = loadBundledMainstreamCatalog().map((t) => t.meta);
+  return cachedMainstreamTracks;
+}
 
 export function getDefaultReferenceCatalog(): AcousticCatalogIndex {
   if (cachedDefaultCatalog) return cachedDefaultCatalog;
@@ -318,6 +349,16 @@ export function getDefaultReferenceCatalog(): AcousticCatalogIndex {
     const pcm = synthesizeReferenceSong(spec, 24, FP_SAMPLE_RATE);
     const hashes = generateFingerprints(pcm, FP_SAMPLE_RATE);
     idx.addTrack(spec.meta, hashes);
+  }
+  // Load pre-computed Wang (2003) constellation fingerprints for real mainstream commercial tracks across 13 genres
+  const mainstream = loadBundledMainstreamCatalog();
+  for (const item of mainstream) {
+    if (item?.meta && Array.isArray(item.hashes)) {
+      idx.addTrack(
+        item.meta,
+        item.hashes.map(([hash, t]) => ({ hash, t })),
+      );
+    }
   }
   cachedDefaultCatalog = idx;
   return idx;

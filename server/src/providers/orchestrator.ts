@@ -29,8 +29,34 @@ export interface RecognitionResponse {
     clippingRatio: number;
     silenceRatio: number;
     durationMs: number;
+    sampleRate?: number;
+    channels?: number;
+    byteLength?: number;
+    fingerprintHashCount?: number;
   };
   cached?: boolean;
+}
+
+export interface AudioDiagnosticReport {
+  valid: boolean;
+  sampleRate: number;
+  channels: number;
+  bitsPerSample: number;
+  durationMs: number;
+  byteLength: number;
+  rmsDbfs: number;
+  peak: number;
+  clippingRatio: number;
+  silenceRatio: number;
+  fingerprintHashCount: number;
+  checks: {
+    signalDetected: boolean;
+    levelSufficient: boolean;
+    durationSufficient: boolean;
+    notClippingSeverely: boolean;
+    encodedValid: boolean;
+    fingerprintReady: boolean;
+  };
 }
 
 interface CacheEntry {
@@ -84,6 +110,48 @@ export class RecognitionOrchestrator {
     return this.opts.providerOrder
       .map((id) => this.opts.providers.get(id))
       .filter((p): p is RecognitionProvider => Boolean(p && p.isConfigured()));
+  }
+
+  inspectAudio(rawWav: Uint8Array): AudioDiagnosticReport {
+    const decoded = decodeWav(rawWav);
+    let mean = 0;
+    for (let i = 0; i < decoded.mono.length; i++) mean += decoded.mono[i];
+    mean /= decoded.mono.length || 1;
+    const dcRemoved = new Float32Array(decoded.mono.length);
+    for (let i = 0; i < decoded.mono.length; i++) dcRemoved[i] = decoded.mono[i] - mean;
+
+    const metrics = analyze(dcRemoved, decoded.sampleRate);
+    const resampled = decoded.sampleRate === 16000 ? dcRemoved : resample(dcRemoved, decoded.sampleRate, 16000);
+    const hashes = generateFingerprints(resampled, 16000);
+
+    const signalDetected = metrics.peak > 0.002 && metrics.silenceRatio < 0.95;
+    const levelSufficient = metrics.rmsDbfs >= -50 && metrics.silenceRatio <= 0.85;
+    const durationSufficient = decoded.durationMs / 1000 >= this.opts.minSeconds;
+    const notClippingSeverely = metrics.clippingRatio < 0.15;
+    const encodedValid = decoded.sampleRate >= 8000 && decoded.channels >= 1;
+    const fingerprintReady = hashes.length >= 12;
+
+    return {
+      valid: signalDetected && levelSufficient && durationSufficient && encodedValid && fingerprintReady,
+      sampleRate: decoded.sampleRate,
+      channels: decoded.channels,
+      bitsPerSample: decoded.bitsPerSample,
+      durationMs: Math.round(decoded.durationMs),
+      byteLength: rawWav.byteLength,
+      rmsDbfs: metrics.rmsDbfs,
+      peak: metrics.peak,
+      clippingRatio: metrics.clippingRatio,
+      silenceRatio: metrics.silenceRatio,
+      fingerprintHashCount: hashes.length,
+      checks: {
+        signalDetected,
+        levelSufficient,
+        durationSufficient,
+        notClippingSeverely,
+        encodedValid,
+        fingerprintReady,
+      },
+    };
   }
 
   async recognize(
@@ -144,6 +212,15 @@ export class RecognitionOrchestrator {
             .map((h) => h.hash.toString(36))
             .join('.')}`
         : null;
+    const enrichedMetrics = {
+      ...metrics,
+      durationMs: Math.round(decoded.durationMs),
+      sampleRate: decoded.sampleRate,
+      channels: decoded.channels,
+      byteLength: rawWav.byteLength,
+      fingerprintHashCount: fpHashes.length,
+    };
+
     if (cacheKey) {
       const hit = this.cache.get(cacheKey);
       if (hit && hit.expiresAt > Date.now()) {
@@ -161,7 +238,7 @@ export class RecognitionOrchestrator {
               platform: ctx.platform,
             },
           },
-          audioMetrics: { ...metrics, durationMs: Math.round(decoded.durationMs) },
+          audioMetrics: enrichedMetrics,
           cached: true,
         };
       }
@@ -215,7 +292,7 @@ export class RecognitionOrchestrator {
             latencyMs: Date.now() - startMs,
             provider: { id: provider.id, name: provider.name },
             result: enriched,
-            audioMetrics: { ...metrics, durationMs: Math.round(decoded.durationMs) },
+            audioMetrics: enrichedMetrics,
           };
         }
 
@@ -229,7 +306,7 @@ export class RecognitionOrchestrator {
           requestId: ctx.requestId,
           latencyMs: Date.now() - startMs,
           provider: { id: provider.id, name: provider.name },
-          audioMetrics: { ...metrics, durationMs: Math.round(decoded.durationMs) },
+          audioMetrics: enrichedMetrics,
         };
       } catch (err) {
         clearTimeout(timer);
@@ -249,7 +326,7 @@ export class RecognitionOrchestrator {
       requestId: ctx.requestId,
       latencyMs: Date.now() - startMs,
       provider: { id: lastProvider.id, name: lastProvider.name },
-      audioMetrics: { ...metrics, durationMs: Math.round(decoded.durationMs) },
+      audioMetrics: enrichedMetrics,
     };
   }
 }

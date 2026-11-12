@@ -306,12 +306,9 @@ public final class RecognitionStateMachine: ObservableObject {
         switch outcome {
         case .matched(let track):
             completeWithMatch(track)
-        case .noMatch:
-            state = .noMatch
-            statusMessage = RecognitionState.noMatch.defaultSubtitle
-        case .serviceError:
-            // Fallback to Auralis Cloud Server on ShazamKit service error
-            statusMessage = "ShazamKit unavailable — falling back to Auralis Cloud Server…"
+        case .noMatch, .serviceError:
+            // Automatically fall back to Auralis Cloud Server on ShazamKit noMatch or serviceError
+            statusMessage = "Checking Auralis Cloud Recognition Catalog…"
             await identifyWithCloudServer(processed: processed)
         }
     }

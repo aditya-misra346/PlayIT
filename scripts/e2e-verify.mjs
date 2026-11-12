@@ -69,12 +69,26 @@ async function verifyEndpoints(baseUrl, expectedVersion) {
   const refRes = await fetch(`${baseUrl}/api/v1/reference-tracks`);
   assert.equal(refRes.status, 200);
   const refJson = await refRes.json();
-  assert.ok(refJson.tracks.length >= 8);
+  assert.ok(refJson.tracks.length >= 35, `Expected >= 35 tracks (27 mainstream + 8 studio), got ${refJson.tracks.length}`);
 
-  const sampleTrack = refJson.tracks[0];
+  const sampleTrack = refJson.tracks.find((t) => t.category === 'studio') ?? refJson.tracks[refJson.tracks.length - 1];
   const wavRes = await fetch(`${baseUrl}${sampleTrack.audioUrl}?startSec=5&durationSec=8`);
   assert.equal(wavRes.status, 200);
   const wavBuf = new Uint8Array(await wavRes.arrayBuffer());
+
+  // 4a. Verify Phase 3 Audio Diagnostics endpoint
+  const diagForm = new FormData();
+  diagForm.set('source', 'microphone');
+  diagForm.set('durationMs', '8000');
+  diagForm.set('audio', new Blob([wavBuf], { type: 'audio/wav' }), 'sample.wav');
+  const diagRes = await fetch(`${baseUrl}/api/v1/diagnostics/audio`, {
+    method: 'POST',
+    body: diagForm,
+  });
+  assert.equal(diagRes.status, 200);
+  const diagJson = await diagRes.json();
+  assert.equal(diagJson.valid, true);
+  assert.ok(diagJson.fingerprintHashCount >= 50);
 
   const form = new FormData();
   form.set('source', 'microphone');

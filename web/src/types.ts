@@ -80,6 +80,10 @@ export interface AudioMetrics {
   clippingRatio: number;
   silenceRatio: number;
   durationMs: number;
+  sampleRate?: number;
+  channels?: number;
+  byteLength?: number;
+  fingerprintHashCount?: number;
 }
 
 export interface AudioInputDevice {
@@ -124,6 +128,8 @@ export interface ReferenceTrack {
   isrc: string | null;
   durationMs: number | null;
   artworkUrl: string | null;
+  category?: 'mainstream' | 'studio';
+  previewUrl?: string | null;
   bpm: number;
   timbre: string;
   hasVocalsFormant: boolean;

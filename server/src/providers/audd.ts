@@ -110,8 +110,20 @@ export function normalizeAudd(r: any, ctx: RecognitionContext) {
       offsetMs: parseTimecode(r.timecode),
       confidence: null,
       links: [
-        link('spotify', sp?.external_urls?.spotify),
-        link('apple_music', am?.url),
+        link(
+          'spotify',
+          sp?.external_urls?.spotify ??
+            `https://open.spotify.com/search/${encodeURIComponent(`${r.title} ${artistNames[0] ?? ''}`.trim())}`,
+        ),
+        link(
+          'apple_music',
+          am?.url ??
+            `https://music.apple.com/us/search?term=${encodeURIComponent(`${r.title} ${artistNames[0] ?? ''}`.trim())}`,
+        ),
+        link(
+          'youtube_music',
+          `https://music.youtube.com/search?q=${encodeURIComponent(`${r.title} ${artistNames[0] ?? ''}`.trim())}`,
+        ),
         link('deezer', dz?.link),
         link('songlink', r.song_link),
         mb?.id ? link('musicbrainz', `https://musicbrainz.org/recording/${encodeURIComponent(mb.id)}`) : null,

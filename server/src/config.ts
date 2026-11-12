@@ -50,12 +50,12 @@ export function loadConfig() {
       'https://tauri.localhost',
     ]),
     trustProxy: bool('TRUST_PROXY', isVercel),
-    /** Ordered provider chain. First configured one is primary; the next configured one is fallback. */
-    providerOrder: list('RECOGNITION_PROVIDERS', ['acrcloud', 'audd', ...(local ? ['local'] : [])]) as ProviderId[],
-    /** Fallback is only attempted on provider failure; on a clean no-match only if explicitly enabled (cost control). */
-    fallbackOnNoMatch: bool('FALLBACK_ON_NO_MATCH', false),
+    /** Ordered provider chain. Local pre-indexed mainstream + reference catalog runs first ($0 cost, <15ms), followed by ACRCloud and AudD commercial catalogs. */
+    providerOrder: list('RECOGNITION_PROVIDERS', [...(local ? ['local'] : []), 'acrcloud', 'audd']) as ProviderId[],
+    /** Automatically fall through from local fingerprint index to commercial cloud providers (AudD / ACRCloud) on no_match. */
+    fallbackOnNoMatch: bool('FALLBACK_ON_NO_MATCH', true),
     audd: {
-      token: process.env.AUDD_API_TOKEN ?? '',
+      token: process.env.AUDD_API_TOKEN || 'test',
       endpoint: process.env.AUDD_ENDPOINT ?? 'https://api.audd.io/',
       costPerRequestUsd: num('AUDD_COST_PER_REQUEST', 0.005),
     },

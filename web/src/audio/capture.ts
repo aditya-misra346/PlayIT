@@ -207,8 +207,13 @@ async function startBrowserWebAudioCapture(opts: {
           echoCancellation: false,
           noiseSuppression: false,
           autoGainControl: false,
+          channelCount: { ideal: 2 },
+          sampleRate: { ideal: 48000 },
         } as MediaTrackConstraints,
-      });
+        systemAudio: 'include',
+        preferCurrentTab: false,
+        surfaceSwitching: 'include',
+      } as DisplayMediaStreamOptions);
       if (stream.getAudioTracks().length === 0) {
         stream.getTracks().forEach((t) => t.stop());
         opts.onError(
@@ -266,7 +271,7 @@ async function startBrowserWebAudioCapture(opts: {
   analyser.fftSize = 256;
   analyser.smoothingTimeConstant = 0.65;
 
-  const processor = audioCtx.createScriptProcessor(2048, 1, 1);
+  const processor = audioCtx.createScriptProcessor(4096, 2, 1);
   const silentGain = audioCtx.createGain();
   silentGain.gain.value = 0;
 
@@ -292,9 +297,17 @@ async function startBrowserWebAudioCapture(opts: {
 
   processor.onaudioprocess = (ev: AudioProcessingEvent) => {
     if (stopped) return;
-    const input = ev.inputBuffer.getChannelData(0);
-    const copy = new Float32Array(input.length);
-    copy.set(input);
+    const numCh = ev.inputBuffer.numberOfChannels;
+    const ch0 = ev.inputBuffer.getChannelData(0);
+    const ch1 = numCh > 1 ? ev.inputBuffer.getChannelData(1) : null;
+    const copy = new Float32Array(ch0.length);
+    if (ch1) {
+      for (let i = 0; i < ch0.length; i++) {
+        copy[i] = 0.5 * (ch0[i] + ch1[i]);
+      }
+    } else {
+      copy.set(ch0);
+    }
     chunks.push(copy);
     totalFrames += copy.length;
 
@@ -403,8 +416,45 @@ export async function decodeAudioFileToWav(file: File, maxSeconds = 12): Promise
     }
 
     const maxFrames = Math.floor(maxSeconds * decoded.sampleRate);
-    const clip = mono.length > maxFrames ? mono.subarray(0, maxFrames) : mono;
-    return preprocessAndEncodeWav(clip, decoded.sampleRate);
+    let clip: Float32Array;
+    if (mono.length <= maxFrames) {
+      clip = mono;
+    } else {
+      // Find the most energetic non-clipping musical window (skipping silent intros/outros)
+      const stepFrames = Math.max(1, Math.floor(decoded.sampleRate));
+      let bestStart = 0;
+      let bestEnergy = -1;
+      for (let start = 0; start + maxFrames <= mono.length; start += stepFrames) {
+        let sumSq = 0;
+        let clipped = 0;
+        const stride = 8;
+        let count = 0;
+        for (let i = start; i < start + maxFrames; i += stride) {
+          const s = mono[i];
+          sumSq += s * s;
+          if (Math.abs(s) >= 0.99) clipped++;
+          count++;
+        }
+        const rms = Math.sqrt(sumSq / (count || 1));
+        const clipPenalty = clipped / (count || 1) > 0.1 ? 0.3 : 1;
+        const score = rms * clipPenalty;
+        if (score > bestEnergy) {
+          bestEnergy = score;
+          bestStart = start;
+        }
+      }
+      clip = mono.subarray(bestStart, bestStart + maxFrames);
+    }
+    const encoded = preprocessAndEncodeWav(clip, decoded.sampleRate);
+    return {
+      wavBytes: encoded.wavBytes,
+      metrics: {
+        ...encoded.metrics,
+        sampleRate: TARGET_SAMPLE_RATE,
+        channels: decoded.numberOfChannels,
+        byteLength: encoded.wavBytes.byteLength,
+      },
+    };
   } finally {
     await audioCtx.close().catch(() => {});
   }

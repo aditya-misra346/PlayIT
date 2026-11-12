@@ -37,8 +37,8 @@ android {
         applicationId = "app.auralis"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.1.1"
+        versionCode = 4
+        versionName = "1.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
         // ShazamKit flavor flips this to true.
@@ -60,13 +60,13 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            buildConfigField("String", "API_BASE", quoted(apiBaseOverride ?: "http://10.0.2.2:8787"))
+            buildConfigField("String", "API_BASE", quoted(apiBaseOverride ?: "https://auralis-eight-kohl.vercel.app"))
         }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            buildConfigField("String", "API_BASE", quoted(apiBaseOverride ?: "https://api.auralis.example"))
+            buildConfigField("String", "API_BASE", quoted(apiBaseOverride ?: "https://auralis-eight-kohl.vercel.app"))
             if (keystorePropsFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }

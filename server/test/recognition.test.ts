@@ -8,7 +8,7 @@ import { analyze, decodeWav, encodeWav16, resample } from '../src/audio/wav.js';
 import { createAuralisApp } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
 import { ApiError } from '../src/errors.js';
-import { FP_SAMPLE_RATE, getDefaultReferenceCatalog, REFERENCE_SONGS, synthesizeReferenceSong } from '../src/fingerprint/referenceCatalog.js';
+import { FP_SAMPLE_RATE, getDefaultReferenceCatalog, getMainstreamCatalogTracks, REFERENCE_SONGS, synthesizeReferenceSong } from '../src/fingerprint/referenceCatalog.js';
 import { ACRCloudProvider } from '../src/providers/acrcloud.js';
 import { AudDProvider } from '../src/providers/audd.js';
 import { LocalCatalogProvider } from '../src/providers/local.js';
@@ -207,6 +207,33 @@ describe('2. Multi-Condition Acoustic Fingerprinting Accuracy Suite', () => {
       unrelated[i] = 0.4 * Math.sin(2 * Math.PI * f * t);
     }
     assert.equal(catalog.match(unrelated, FP_SAMPLE_RATE, 20), null);
+  });
+
+  it('loads all 27 mainstream commercial tracks across all 13 genres alongside the 8 studio reference tracks', () => {
+    const mainstream = getMainstreamCatalogTracks();
+    assert.equal(mainstream.length, 27);
+    assert.equal(catalog.size, 35);
+    const requiredGenres = [
+      'Pop',
+      'Hip-Hop',
+      'Rap',
+      'Rock',
+      'Alternative',
+      'Electronic',
+      'Dance',
+      'R&B',
+      'Bollywood',
+      'Indian Regional',
+      'Classical',
+      'Instrumental',
+      'Acoustic',
+    ];
+    for (const g of requiredGenres) {
+      assert.ok(
+        mainstream.some((t) => t.genres.includes(g)),
+        `Expected mainstream catalog to include genre "${g}"`,
+      );
+    }
   });
 });
 
@@ -479,6 +506,25 @@ describe('4. End-to-End HTTP API Server (Config, Multipart Recognition, Auth, Li
       assert.equal(recJson.status, 'match');
       assert.equal(recJson.result.title, targetSpec.meta.title);
       assert.equal(recJson.result.artist, targetSpec.meta.artists.join(', '));
+
+      // 2b. POST /api/v1/diagnostics/audio (Phase 3 diagnostic verification)
+      const diagForm = new FormData();
+      diagForm.set('source', 'microphone');
+      diagForm.set('durationMs', '8000');
+      diagForm.set('audio', new Blob([wav as unknown as BlobPart], { type: 'audio/wav' }), 'sample.wav');
+      const diagRes = await fetch(`${base}/api/v1/diagnostics/audio`, {
+        method: 'POST',
+        body: diagForm,
+      });
+      assert.equal(diagRes.status, 200);
+      const diagJson: any = await diagRes.json();
+      assert.equal(diagJson.valid, true);
+      assert.equal(diagJson.checks.signalDetected, true);
+      assert.equal(diagJson.checks.levelSufficient, true);
+      assert.equal(diagJson.checks.durationSufficient, true);
+      assert.equal(diagJson.checks.encodedValid, true);
+      assert.equal(diagJson.checks.fingerprintReady, true);
+      assert.ok(diagJson.fingerprintHashCount >= 50);
 
       // 3. Register account, sync library item, fetch library, delete account
       const regRes = await fetch(`${base}/api/v1/auth/register`, {

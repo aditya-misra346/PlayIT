@@ -1,4 +1,4 @@
-const CACHE_NAME = 'auralis-shell-v1.1.1-3';
+const CACHE_NAME = 'auralis-shell-v1.2.0-4';
 const SHELL_ASSETS = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
 
 self.addEventListener('install', (event) => {
