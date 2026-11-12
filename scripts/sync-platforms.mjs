@@ -116,6 +116,10 @@ updateFile('desktop/src-tauri/Cargo.toml', (raw) =>
   raw.replace(/^version\s*=\s*"[^"]+"/m, `version = "${version}"`),
 );
 
+updateFile('desktop/src-tauri/Cargo.lock', (raw) =>
+  raw.replace(/(name = "auralis-desktop"\nversion = ")[^"]+(")/, `$1${version}$2`),
+);
+
 updateFile('desktop/src-tauri/Info.plist', (raw) =>
   raw
     .replace(
