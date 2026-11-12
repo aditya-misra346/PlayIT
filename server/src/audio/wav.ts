@@ -131,31 +131,67 @@ function round(x: number, d = 2) {
   return Math.round(x * f) / f;
 }
 
-/** Windowed-sinc (Blackman) resampler with anti-aliasing low-pass. Adequate quality for fingerprinting. */
+/** Polyphase Windowed-sinc (Blackman) resampler with anti-aliasing low-pass (256 fractional phases). */
 export function resample(input: Float32Array, from: number, to: number): Float32Array {
   if (from === to) return input.slice();
   const ratio = to / from;
   const outLen = Math.floor(input.length * ratio);
   const out = new Float32Array(outLen);
   const cutoff = Math.min(1, ratio) * 0.95; // normalised to input Nyquist
-  const half = 24; // taps each side (in input samples, scaled below)
-  const scale = Math.max(1, 1 / ratio);
+  const half = 16; // taps each side (in output-bandlimited samples)
+  const scale = Math.max(1, Math.min(4, 1 / ratio));
   const taps = Math.ceil(half * scale);
+  const width = 2 * taps;
+  const PHASES = 256;
+
+  // Precompute polyphase Blackman-windowed sinc kernel table once per resample call
+  const table = new Float32Array(PHASES * width);
+  const tableNorm = new Float32Array(PHASES);
+  for (let p = 0; p < PHASES; p++) {
+    const frac = p / PHASES;
+    let norm = 0;
+    const rowOff = p * width;
+    for (let j = 0; j < width; j++) {
+      const m = j - taps + 1; // offset relative to c0: k = c0 + m
+      const x = frac - m;
+      const t = x * cutoff;
+      const sinc = Math.abs(t) < 1e-7 ? 1 : Math.sin(Math.PI * t) / (Math.PI * t);
+      const n = (x + taps) / (2 * taps);
+      const wdw =
+        n <= 0 || n >= 1
+          ? 0
+          : 0.42 - 0.5 * Math.cos(2 * Math.PI * n) + 0.08 * Math.cos(4 * Math.PI * n);
+      const h = sinc * wdw;
+      table[rowOff + j] = h;
+      norm += h;
+    }
+    tableNorm[p] = norm || 1;
+  }
+
+  const inLen = input.length;
   for (let i = 0; i < outLen; i++) {
     const center = i / ratio;
     const c0 = Math.floor(center);
+    const frac = center - c0;
+    const p = Math.min(PHASES - 1, Math.floor(frac * PHASES));
+    const rowOff = p * width;
+    const kStart = c0 - taps + 1;
     let acc = 0;
-    let norm = 0;
-    for (let k = c0 - taps + 1; k <= c0 + taps; k++) {
-      if (k < 0 || k >= input.length) continue;
-      const x = center - k;
-      const t = x * cutoff;
-      const sinc = t === 0 ? 1 : Math.sin(Math.PI * t) / (Math.PI * t);
-      const n = (x + taps) / (2 * taps);
-      const wdw = n <= 0 || n >= 1 ? 0 : 0.42 - 0.5 * Math.cos(2 * Math.PI * n) + 0.08 * Math.cos(4 * Math.PI * n);
-      const h = sinc * wdw;
-      acc += input[k] * h;
-      norm += h;
+    let norm = tableNorm[p];
+
+    if (kStart >= 0 && kStart + width <= inLen) {
+      for (let j = 0; j < width; j++) {
+        acc += input[kStart + j] * table[rowOff + j];
+      }
+    } else {
+      norm = 0;
+      for (let j = 0; j < width; j++) {
+        const k = kStart + j;
+        if (k < 0 || k >= inLen) continue;
+        const h = table[rowOff + j];
+        acc += input[k] * h;
+        norm += h;
+      }
     }
     out[i] = norm ? acc / norm : 0;
   }

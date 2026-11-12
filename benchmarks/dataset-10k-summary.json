@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-11-12T12:27:42.812Z",
+  "totalUniqueTracks": 10000,
+  "uniquePrimaryArtists": 1056,
+  "localAudioFixturesReady": 83,
+  "itunesAuthorizedPreviewUrls": 4593,
+  "genreDistribution": {
+    "Pop": 2000,
+    "Hip-hop and Rap": 1500,
+    "Rock and Alternative": 1200,
+    "R&B and Soul": 900,
+    "Dance, EDM and Electronic": 900,
+    "Party, Club and Dance Hits": 700,
+    "Indie and Alternative Pop": 600,
+    "Country": 500,
+    "Other mainstream English-language genres": 500,
+    "Punk and Metal": 400,
+    "Jazz, Blues, Funk and Disco": 400,
+    "Acoustic and Singer-Songwriter": 400
+  },
+  "eraDistribution": {
+    "2020–present": 2120,
+    "2010–2019": 2588,
+    "1980s": 931,
+    "2000–2009": 1438,
+    "1990s": 1119,
+    "1960s and earlier": 917,
+    "1970s": 887
+  },
+  "recordingTypeDistribution": {
+    "studio_original": 6281,
+    "live": 80,
+    "acoustic": 1097,
+    "remix": 232,
+    "remaster": 1204,
+    "radio_edit": 1106
+  },
+  "licensingStatus": "Authorized metadata via Apple Music / iTunes Search API + 30-second licensed preview streams and Auralis studio reference synthesis. Zero unauthorized audio scraping."
+}

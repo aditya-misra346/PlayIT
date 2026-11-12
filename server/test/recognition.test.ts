@@ -209,10 +209,10 @@ describe('2. Multi-Condition Acoustic Fingerprinting Accuracy Suite', () => {
     assert.equal(catalog.match(unrelated, FP_SAMPLE_RATE, 20), null);
   });
 
-  it('loads all 50 mainstream commercial tracks across all 13 genres alongside the 8 studio reference tracks', () => {
+  it('loads all 75 mainstream commercial tracks across all genres and decades alongside the 8 studio reference tracks', () => {
     const mainstream = getMainstreamCatalogTracks();
-    assert.equal(mainstream.length, 50);
-    assert.equal(catalog.size, 58);
+    assert.equal(mainstream.length, 75);
+    assert.equal(catalog.size, 83);
     const requiredGenres = [
       'Pop',
       'Hip-Hop',

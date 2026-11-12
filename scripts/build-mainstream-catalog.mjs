@@ -76,6 +76,33 @@ const QUERIES = [
   { genre: 'Pop', query: 'Sabrina Carpenter Espresso', trackId: 1752214923, country: 'US' },
   { genre: 'Pop', query: 'Taylor Swift Cruel Summer', trackId: 1468058171, country: 'US' },
   { genre: 'Rock', query: 'Coldplay Viva La Vida', trackId: 1122773680, country: 'US' },
+
+  // 25 additional tracks covering all 12 Phase-1 genres and all 7 eras (1960s, 1970s, 1980s, 1990s, 2000s, 2010s, 2020s)
+  { genre: 'Rock and Alternative', query: 'The Beatles Here Comes the Sun', country: 'US' },
+  { genre: 'R&B and Soul', query: 'Aretha Franklin Respect', country: 'US' },
+  { genre: 'R&B and Soul', query: 'Marvin Gaye Ain t No Mountain High Enough', country: 'US' },
+  { genre: 'Rock and Alternative', query: 'Fleetwood Mac Dreams', country: 'US' },
+  { genre: 'Jazz, Blues, Funk and Disco', query: 'Earth Wind Fire September', country: 'US' },
+  { genre: 'Jazz, Blues, Funk and Disco', query: 'Stevie Wonder Superstition', country: 'US' },
+  { genre: 'Pop', query: 'Michael Jackson Billie Jean', country: 'US' },
+  { genre: 'Rock and Alternative', query: 'Bon Jovi Livin on a Prayer', country: 'US' },
+  { genre: 'Pop', query: 'Whitney Houston I Wanna Dance with Somebody', country: 'US' },
+  { genre: 'Rock and Alternative', query: 'Oasis Wonderwall', country: 'US' },
+  { genre: 'Punk and Metal', query: 'Green Day Basket Case', country: 'US' },
+  { genre: 'Punk and Metal', query: 'Metallica Enter Sandman', country: 'US' },
+  { genre: 'Punk and Metal', query: 'blink-182 All the Small Things', country: 'US' },
+  { genre: 'Punk and Metal', query: 'Linkin Park Numb', country: 'US' },
+  { genre: 'Country', query: 'Luke Combs Fast Car', country: 'US' },
+  { genre: 'Country', query: 'Chris Stapleton Tennessee Whiskey', country: 'US' },
+  { genre: 'Country', query: 'Shania Twain Man I Feel Like a Woman', country: 'US' },
+  { genre: 'Country', query: 'Morgan Wallen Last Night', country: 'US' },
+  { genre: 'Party, Club and Dance Hits', query: 'Usher Yeah', country: 'US' },
+  { genre: 'Party, Club and Dance Hits', query: 'Mark Ronson Bruno Mars Uptown Funk', country: 'US' },
+  { genre: 'Party, Club and Dance Hits', query: 'Pitbull Give Me Everything', country: 'US' },
+  { genre: 'Indie and Alternative Pop', query: 'Lana Del Rey Summertime Sadness', country: 'US' },
+  { genre: 'Indie and Alternative Pop', query: 'Foster the People Pumped Up Kicks', country: 'US' },
+  { genre: 'Jazz, Blues, Funk and Disco', query: 'Bee Gees Stayin Alive', country: 'US' },
+  { genre: 'Acoustic and Singer-Songwriter', query: 'Tracy Chapman Fast Car', country: 'US' },
 ];
 
 async function searchItunesTrack(query, trackId) {

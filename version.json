@@ -1,11 +1,11 @@
 {
-  "version": "1.3.0",
-  "buildNumber": 5,
+  "version": "1.4.0",
+  "buildNumber": 6,
   "releaseDate": "2026-11-12",
   "channel": "production",
   "minCompatibleVersion": "1.0.0",
   "productionUrl": "https://auralis-eight-kohl.vercel.app",
-  "notes": "Unified cross-platform release v1.3.0 across Web, PWA, Android, iOS/iPadOS, macOS, Windows, and Linux with 58-track Constellation-Peak catalog (Shape of You, Despacito, Loser - Tame Impala, Reflections - The Neighbourhood, etc.) and canonical studio metadata enrichment.",
+  "notes": "Unified cross-platform release v1.4.0 across Web, PWA, Android, iOS/iPadOS, macOS, Windows, and Linux with 83-track Constellation-Peak catalog, per-band adaptive noise floor thresholding, 50x faster polyphase Blackman-sinc resampler, and 10,000-song benchmark infrastructure.",
   "platforms": {
     "web": {
       "version": "1.2.0",

@@ -70,27 +70,42 @@ export function extractConstellationPeaks(monoInput: Float32Array, sampleRate: n
   const spec = new Float32Array(numFrames * halfBins);
   const frameBuf = new Float32Array(halfBins);
 
+  const bandSums = new Float64Array(BANDS.length);
+  const bandCounts = new Int32Array(BANDS.length);
   let globalSum = 0;
   let globalCount = 0;
   for (let t = 0; t < numFrames; t++) {
     fft.magnitudeSpectrumDb(sig, t * FP_HOP_SIZE, frameBuf);
     const rowOff = t * halfBins;
-    for (let b = 16; b < 320; b++) {
-      const v = frameBuf[b];
-      spec[rowOff + b] = v;
-      globalSum += v;
-      globalCount++;
+    for (let bi = 0; bi < BANDS.length; bi++) {
+      const [bStart, bEnd] = BANDS[bi];
+      for (let b = bStart; b < bEnd; b++) {
+        const v = frameBuf[b];
+        spec[rowOff + b] = v;
+        bandSums[bi] += v;
+        bandCounts[bi]++;
+        globalSum += v;
+        globalCount++;
+      }
     }
   }
-  const noiseFloorDb = globalCount ? globalSum / globalCount + 4.5 : -60;
+  const globalMeanDb = globalCount ? globalSum / globalCount : -60;
+  const bandFloorsDb = new Float32Array(BANDS.length);
+  for (let bi = 0; bi < BANDS.length; bi++) {
+    const bandMeanDb = bandCounts[bi] ? bandSums[bi] / bandCounts[bi] : globalMeanDb;
+    // Per-band adaptive noise floor prevents high-frequency pre-emphasized broadband noise
+    // from starving low/mid musical fundamentals (250–1400 Hz), while clamping extreme quiet bands.
+    bandFloorsDb[bi] = Math.max(globalMeanDb - 12, bandMeanDb + 4.2);
+  }
 
-  // Step 1: For each frame and each band, pick the strongest bin above noiseFloorDb.
+  // Step 1: For each frame and each band, pick the strongest bin above that band's adaptive noise floor.
   const candidates: Peak[] = [];
   for (let t = 0; t < numFrames; t++) {
     const rowOff = t * halfBins;
-    for (const [bStart, bEnd] of BANDS) {
+    for (let bi = 0; bi < BANDS.length; bi++) {
+      const [bStart, bEnd] = BANDS[bi];
       let bestBin = -1;
-      let bestVal = noiseFloorDb;
+      let bestVal = bandFloorsDb[bi];
       for (let b = bStart; b < bEnd; b++) {
         const v = spec[rowOff + b];
         if (v > bestVal) {
@@ -277,8 +292,8 @@ export class AcousticCatalogIndex {
     }
 
     if (bestTrackIdx < 0 || bestHits < minAlignedHits) return null;
-    // Also require distinctiveness over the runner-up track so noise cannot ambiguously trigger.
-    if (runnerUpHits > 0 && bestHits < runnerUpHits * 1.6 && bestHits < minAlignedHits * 2) {
+    // Require distinctiveness over the runner-up track so broadband noise, speech, or fan hum cannot ambiguously trigger.
+    if (runnerUpHits > 0 && bestHits < runnerUpHits * 1.38 && bestHits < 140) {
       return null;
     }
 

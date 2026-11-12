@@ -1,6 +1,6 @@
 [package]
 name = "auralis-desktop"
-version = "1.3.0"
+version = "1.4.0"
 description = "Auralis native desktop music recognition client (Tauri 2)"
 authors = ["Auralis Team"]
 edition = "2021"

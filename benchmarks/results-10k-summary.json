@@ -1,0 +1,778 @@
+{
+  "generatedAt": "2026-11-12T12:28:19.707Z",
+  "dataset": {
+    "generatedAt": "2026-11-12T12:27:42.812Z",
+    "totalUniqueTracks": 10000,
+    "uniquePrimaryArtists": 1056,
+    "localAudioFixturesReady": 83,
+    "itunesAuthorizedPreviewUrls": 4593,
+    "genreDistribution": {
+      "Pop": 2000,
+      "Hip-hop and Rap": 1500,
+      "Rock and Alternative": 1200,
+      "R&B and Soul": 900,
+      "Dance, EDM and Electronic": 900,
+      "Party, Club and Dance Hits": 700,
+      "Indie and Alternative Pop": 600,
+      "Country": 500,
+      "Other mainstream English-language genres": 500,
+      "Punk and Metal": 400,
+      "Jazz, Blues, Funk and Disco": 400,
+      "Acoustic and Singer-Songwriter": 400
+    },
+    "eraDistribution": {
+      "2020–present": 2120,
+      "2010–2019": 2588,
+      "1980s": 931,
+      "2000–2009": 1438,
+      "1990s": 1119,
+      "1960s and earlier": 917,
+      "1970s": 887
+    },
+    "recordingTypeDistribution": {
+      "studio_original": 6281,
+      "live": 80,
+      "acoustic": 1097,
+      "remix": 232,
+      "remaster": 1204,
+      "radio_edit": 1106
+    },
+    "licensingStatus": "Authorized metadata via Apple Music / iTunes Search API + 30-second licensed preview streams and Auralis studio reference synthesis. Zero unauthorized audio scraping."
+  },
+  "level1RecognitionEngineBenchmark": {
+    "totalDatasetSongs": 10000,
+    "localIndexedReferenceSongs": 83,
+    "itunesCloudCatalogVerifiedSongs": 4593,
+    "exactMatchesOnIndexedAudio": 83,
+    "partialMatchesOnIndexedAudio": 0,
+    "incorrectMatchesOnIndexedAudio": 0,
+    "unindexedRequiresCloudQuota": 9917,
+    "exactMatchRateOnIndexedPct": 100,
+    "multiSectionResults": {
+      "beginning": {
+        "section": "Beginning (0.5s..8.5s)",
+        "testedCount": 83,
+        "exactMatches": 83,
+        "partialMatches": 0,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "exactMatchRatePct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.18,
+          "medianMs": 10.96,
+          "p95Ms": 13.19,
+          "minMs": 9.47,
+          "maxMs": 16.53
+        }
+      },
+      "middle": {
+        "section": "Middle / Vocal Hook (10.0s..18.0s)",
+        "testedCount": 83,
+        "exactMatches": 83,
+        "partialMatches": 0,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "exactMatchRatePct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 10.99,
+          "medianMs": 11.02,
+          "p95Ms": 11.55,
+          "minMs": 9.57,
+          "maxMs": 11.99
+        }
+      },
+      "later": {
+        "section": "Later Section (16.0s..24.0s)",
+        "testedCount": 83,
+        "exactMatches": 83,
+        "partialMatches": 0,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "exactMatchRatePct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11,
+          "medianMs": 10.98,
+          "p95Ms": 11.76,
+          "minMs": 9.67,
+          "maxMs": 12.23
+        }
+      }
+    },
+    "versionDiscriminationResults": [
+      {
+        "testId": "AURALIS-10K-07801",
+        "expectedTitle": "Fast Car",
+        "expectedArtist": "Luke Combs",
+        "expectedYear": 2023,
+        "section": "beginning",
+        "actualTitle": "Fast Car",
+        "actualArtist": "Luke Combs",
+        "alignedHits": 918,
+        "runnerUpHits": 5,
+        "exactRecordingMatch": true
+      },
+      {
+        "testId": "AURALIS-10K-07801",
+        "expectedTitle": "Fast Car",
+        "expectedArtist": "Luke Combs",
+        "expectedYear": 2023,
+        "section": "middle",
+        "actualTitle": "Fast Car",
+        "actualArtist": "Luke Combs",
+        "alignedHits": 2453,
+        "runnerUpHits": 5,
+        "exactRecordingMatch": true
+      },
+      {
+        "testId": "AURALIS-10K-07801",
+        "expectedTitle": "Fast Car",
+        "expectedArtist": "Luke Combs",
+        "expectedYear": 2023,
+        "section": "later",
+        "actualTitle": "Fast Car",
+        "actualArtist": "Luke Combs",
+        "alignedHits": 2426,
+        "runnerUpHits": 5,
+        "exactRecordingMatch": true
+      },
+      {
+        "testId": "AURALIS-10K-09603",
+        "expectedTitle": "Fast Car",
+        "expectedArtist": "Tracy Chapman",
+        "expectedYear": 1988,
+        "section": "beginning",
+        "actualTitle": "Fast Car",
+        "actualArtist": "Tracy Chapman",
+        "alignedHits": 834,
+        "runnerUpHits": 4,
+        "exactRecordingMatch": true
+      },
+      {
+        "testId": "AURALIS-10K-09603",
+        "expectedTitle": "Fast Car",
+        "expectedArtist": "Tracy Chapman",
+        "expectedYear": 1988,
+        "section": "middle",
+        "actualTitle": "Fast Car",
+        "actualArtist": "Tracy Chapman",
+        "alignedHits": 1945,
+        "runnerUpHits": 5,
+        "exactRecordingMatch": true
+      },
+      {
+        "testId": "AURALIS-10K-09603",
+        "expectedTitle": "Fast Car",
+        "expectedArtist": "Tracy Chapman",
+        "expectedYear": 1988,
+        "section": "later",
+        "actualTitle": "Fast Car",
+        "actualArtist": "Tracy Chapman",
+        "alignedHits": 1797,
+        "runnerUpHits": 5,
+        "exactRecordingMatch": true
+      }
+    ],
+    "byGenre": {
+      "Pop": {
+        "total": 2000,
+        "indexedInLocalEngine": 14,
+        "itunesCloudCatalogVerified": 1544,
+        "exactMatchesOnIndexed": 14,
+        "incorrectMatches": 0
+      },
+      "Hip-hop and Rap": {
+        "total": 1500,
+        "indexedInLocalEngine": 6,
+        "itunesCloudCatalogVerified": 1500,
+        "exactMatchesOnIndexed": 6,
+        "incorrectMatches": 0
+      },
+      "Rock and Alternative": {
+        "total": 1200,
+        "indexedInLocalEngine": 21,
+        "itunesCloudCatalogVerified": 1012,
+        "exactMatchesOnIndexed": 21,
+        "incorrectMatches": 0
+      },
+      "R&B and Soul": {
+        "total": 900,
+        "indexedInLocalEngine": 4,
+        "itunesCloudCatalogVerified": 58,
+        "exactMatchesOnIndexed": 4,
+        "incorrectMatches": 0
+      },
+      "Dance, EDM and Electronic": {
+        "total": 900,
+        "indexedInLocalEngine": 4,
+        "itunesCloudCatalogVerified": 453,
+        "exactMatchesOnIndexed": 4,
+        "incorrectMatches": 0
+      },
+      "Party, Club and Dance Hits": {
+        "total": 700,
+        "indexedInLocalEngine": 3,
+        "itunesCloudCatalogVerified": 3,
+        "exactMatchesOnIndexed": 3,
+        "incorrectMatches": 0
+      },
+      "Indie and Alternative Pop": {
+        "total": 600,
+        "indexedInLocalEngine": 3,
+        "itunesCloudCatalogVerified": 3,
+        "exactMatchesOnIndexed": 3,
+        "incorrectMatches": 0
+      },
+      "Country": {
+        "total": 500,
+        "indexedInLocalEngine": 4,
+        "itunesCloudCatalogVerified": 4,
+        "exactMatchesOnIndexed": 4,
+        "incorrectMatches": 0
+      },
+      "Other mainstream English-language genres": {
+        "total": 500,
+        "indexedInLocalEngine": 13,
+        "itunesCloudCatalogVerified": 13,
+        "exactMatchesOnIndexed": 13,
+        "incorrectMatches": 0
+      },
+      "Punk and Metal": {
+        "total": 400,
+        "indexedInLocalEngine": 4,
+        "itunesCloudCatalogVerified": 4,
+        "exactMatchesOnIndexed": 4,
+        "incorrectMatches": 0
+      },
+      "Jazz, Blues, Funk and Disco": {
+        "total": 400,
+        "indexedInLocalEngine": 4,
+        "itunesCloudCatalogVerified": 4,
+        "exactMatchesOnIndexed": 4,
+        "incorrectMatches": 0
+      },
+      "Acoustic and Singer-Songwriter": {
+        "total": 400,
+        "indexedInLocalEngine": 3,
+        "itunesCloudCatalogVerified": 3,
+        "exactMatchesOnIndexed": 3,
+        "incorrectMatches": 0
+      }
+    },
+    "byEra": {
+      "2020–present": {
+        "total": 2120,
+        "indexedInLocalEngine": 16,
+        "itunesCloudCatalogVerified": 1359,
+        "exactMatchesOnIndexed": 16
+      },
+      "2010–2019": {
+        "total": 2588,
+        "indexedInLocalEngine": 35,
+        "itunesCloudCatalogVerified": 1824,
+        "exactMatchesOnIndexed": 35
+      },
+      "1980s": {
+        "total": 931,
+        "indexedInLocalEngine": 6,
+        "itunesCloudCatalogVerified": 156,
+        "exactMatchesOnIndexed": 6
+      },
+      "2000–2009": {
+        "total": 1438,
+        "indexedInLocalEngine": 11,
+        "itunesCloudCatalogVerified": 671,
+        "exactMatchesOnIndexed": 11
+      },
+      "1990s": {
+        "total": 1119,
+        "indexedInLocalEngine": 7,
+        "itunesCloudCatalogVerified": 349,
+        "exactMatchesOnIndexed": 7
+      },
+      "1960s and earlier": {
+        "total": 917,
+        "indexedInLocalEngine": 4,
+        "itunesCloudCatalogVerified": 135,
+        "exactMatchesOnIndexed": 4
+      },
+      "1970s": {
+        "total": 887,
+        "indexedInLocalEngine": 4,
+        "itunesCloudCatalogVerified": 107,
+        "exactMatchesOnIndexed": 4
+      }
+    },
+    "byRecordingType": {
+      "studio_original": {
+        "total": 6281,
+        "indexedInLocalEngine": 82,
+        "exactMatchesOnIndexed": 82
+      },
+      "live": {
+        "total": 80,
+        "indexedInLocalEngine": 0,
+        "exactMatchesOnIndexed": 0
+      },
+      "acoustic": {
+        "total": 1097,
+        "indexedInLocalEngine": 0,
+        "exactMatchesOnIndexed": 0
+      },
+      "remix": {
+        "total": 232,
+        "indexedInLocalEngine": 0,
+        "exactMatchesOnIndexed": 0
+      },
+      "remaster": {
+        "total": 1204,
+        "indexedInLocalEngine": 1,
+        "exactMatchesOnIndexed": 1
+      },
+      "radio_edit": {
+        "total": 1106,
+        "indexedInLocalEngine": 0,
+        "exactMatchesOnIndexed": 0
+      }
+    }
+  },
+  "phase4MultiConditionBenchmark": {
+    "totalRuns": 1494,
+    "totalExactMatches": 1494,
+    "totalIncorrectMatches": 0,
+    "overallMultiConditionAccuracyPct": 100,
+    "conditions": [
+      {
+        "id": "vol_normal",
+        "category": "Volume",
+        "name": "Normal Volume (0 dB)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 12.33,
+          "medianMs": 11.69,
+          "p95Ms": 16.65,
+          "minMs": 10.89,
+          "maxMs": 21.59
+        }
+      },
+      {
+        "id": "vol_low",
+        "category": "Volume",
+        "name": "Low Volume (-18 dB)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 12.22,
+          "medianMs": 11.79,
+          "p95Ms": 13,
+          "minMs": 10.4,
+          "maxMs": 34.77
+        }
+      },
+      {
+        "id": "vol_very_low",
+        "category": "Volume",
+        "name": "Very Low Volume (-36 dB)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.66,
+          "medianMs": 11.68,
+          "p95Ms": 12.31,
+          "minMs": 10.16,
+          "maxMs": 12.92
+        }
+      },
+      {
+        "id": "vol_high",
+        "category": "Volume",
+        "name": "High Volume Without Clipping (0.98 Peak)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.68,
+          "medianMs": 11.59,
+          "p95Ms": 12.48,
+          "minMs": 10.38,
+          "maxMs": 17.51
+        }
+      },
+      {
+        "id": "env_quiet",
+        "category": "Environment",
+        "name": "Quiet Room (SNR +35 dB)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.88,
+          "medianMs": 11.72,
+          "p95Ms": 13.58,
+          "minMs": 10.68,
+          "maxMs": 16.28
+        }
+      },
+      {
+        "id": "env_conversation",
+        "category": "Environment",
+        "name": "Moderate Background Conversation",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 12.66,
+          "medianMs": 12.31,
+          "p95Ms": 15.27,
+          "minMs": 11.11,
+          "maxMs": 18.48
+        }
+      },
+      {
+        "id": "env_busy_room",
+        "category": "Environment",
+        "name": "Busy Room + Reverberation",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 12.28,
+          "medianMs": 12.1,
+          "p95Ms": 13.59,
+          "minMs": 11.29,
+          "maxMs": 16.53
+        }
+      },
+      {
+        "id": "env_tv_audio",
+        "category": "Environment",
+        "name": "Television Speech in Background",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 12.3,
+          "medianMs": 11.91,
+          "p95Ms": 13.51,
+          "minMs": 10.9,
+          "maxMs": 22.27
+        }
+      },
+      {
+        "id": "env_traffic",
+        "category": "Environment",
+        "name": "Street Traffic Noise",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.86,
+          "medianMs": 11.69,
+          "p95Ms": 13.15,
+          "minMs": 10.77,
+          "maxMs": 14.81
+        }
+      },
+      {
+        "id": "env_fan_hvac",
+        "category": "Environment",
+        "name": "Fan / HVAC Harmonic Noise (60/120/180 Hz)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.85,
+          "medianMs": 11.72,
+          "p95Ms": 12.66,
+          "minMs": 11.11,
+          "maxMs": 15.54
+        }
+      },
+      {
+        "id": "env_broadband",
+        "category": "Environment",
+        "name": "General Broadband Environmental Noise",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.72,
+          "medianMs": 11.78,
+          "p95Ms": 12.25,
+          "minMs": 11.01,
+          "maxMs": 12.6
+        }
+      },
+      {
+        "id": "qual_48k_resample",
+        "category": "Audio Quality",
+        "name": "48 kHz Capture -> 16 kHz Resample",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.61,
+          "medianMs": 11.66,
+          "p95Ms": 12.23,
+          "minMs": 10.46,
+          "maxMs": 13.07
+        }
+      },
+      {
+        "id": "qual_compressed",
+        "category": "Audio Quality",
+        "name": "Compressed Audio (8-bit Quantized + 3.8 kHz LP)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.68,
+          "medianMs": 11.6,
+          "p95Ms": 12.49,
+          "minMs": 10.58,
+          "maxMs": 16.02
+        }
+      },
+      {
+        "id": "qual_8k_phone",
+        "category": "Audio Quality",
+        "name": "Lower-Quality 8 kHz Sample Rate Capture",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.55,
+          "medianMs": 11.53,
+          "p95Ms": 12.17,
+          "minMs": 10.42,
+          "maxMs": 12.44
+        }
+      },
+      {
+        "id": "qual_stereo_imbalance",
+        "category": "Audio Quality",
+        "name": "Asymmetric Stereo Downmix (0.75L + 0.25R)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.45,
+          "medianMs": 11.44,
+          "p95Ms": 12.19,
+          "minMs": 10.21,
+          "maxMs": 12.44
+        }
+      },
+      {
+        "id": "spk_laptop",
+        "category": "External Speakers",
+        "name": "Laptop Speaker Impulse Response (220–4200 Hz)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.65,
+          "medianMs": 11.63,
+          "p95Ms": 12.27,
+          "minMs": 10.88,
+          "maxMs": 12.77
+        }
+      },
+      {
+        "id": "spk_mobile_phone",
+        "category": "External Speakers",
+        "name": "External Mobile Phone Speaker (300–3600 Hz)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.67,
+          "medianMs": 11.66,
+          "p95Ms": 12.38,
+          "minMs": 10.82,
+          "maxMs": 12.58
+        }
+      },
+      {
+        "id": "spk_bluetooth",
+        "category": "External Speakers",
+        "name": "Bluetooth Speaker Playback (140–5200 Hz)",
+        "tested": 83,
+        "exactMatches": 83,
+        "incorrectMatches": 0,
+        "noMatches": 0,
+        "accuracyPct": 100,
+        "latency": {
+          "count": 83,
+          "avgMs": 11.86,
+          "medianMs": 11.66,
+          "p95Ms": 12.25,
+          "minMs": 11.08,
+          "maxMs": 24.83
+        }
+      }
+    ]
+  },
+  "phase9NegativeBenchmark": {
+    "totalTrials": 100,
+    "totalFalsePositives": 0,
+    "falsePositiveRatePct": 0,
+    "categories": [
+      {
+        "category": "Pure Digital Silence",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Quiet Room Floor (-58 dBFS)",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Spoken Conversation (Formant & Syllabic Cadence)",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Podcast Dialogue (Two Alternating Voices)",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "General Broadband Environmental Noise",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Television News Speech + Room Echo",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Non-Musical Sound Effects (Sirens, Clicks & Sweeps)",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Mechanical Fan / HVAC 60 Hz Harmonic Hum",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Unknown / Unindexed Instrumental Recording",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      },
+      {
+        "category": "Music Not Included in Reference Dataset",
+        "trials": 10,
+        "correctlyRejected": 10,
+        "falsePositives": 0,
+        "falsePositiveRatePct": 0
+      }
+    ]
+  },
+  "latencyMetrics": {
+    "preprocessingAndDiagnosticsMs": {
+      "count": 249,
+      "avgMs": 11.81,
+      "medianMs": 11.64,
+      "p95Ms": 12.29,
+      "minMs": 11.04,
+      "maxMs": 21.94
+    },
+    "acousticMatchingEngineMs": {
+      "count": 1743,
+      "avgMs": 11.77,
+      "medianMs": 11.63,
+      "p95Ms": 12.92,
+      "minMs": 9.47,
+      "maxMs": 34.77
+    },
+    "liveVercelHttpEndToEndMs": {
+      "avgMs": 126.1,
+      "medianMs": 115,
+      "p95Ms": 210
+    },
+    "liveAuddCloudApiMs": {
+      "avgMs": 1219.3,
+      "medianMs": 1039,
+      "p95Ms": 2272
+    }
+  }
+}
