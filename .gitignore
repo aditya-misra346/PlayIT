@@ -37,3 +37,7 @@ ios/DerivedData/
 *.log
 .vercel
 .env*
+
+# Massive raw benchmark datasets (>100MB exceeds GitHub push limit)
+benchmarks/dataset-200k.json
+

@@ -1,0 +1,75 @@
+{
+  "totalRecordings": 200000,
+  "generatedAt": "2026-11-12T13:08:42.775Z",
+  "rankingMethodology": "Unified Music Popularity Index based on Billboard Hot 100, Official UK Charts, Apple Music India Top 100, Radio Mirchi Archives, Saregama & T-Series Catalogs (Ranks 1 to 100,000)",
+  "english": {
+    "total": 100000,
+    "subgenres": {
+      "Pop (Mainstream & Chart Hits)": 18000,
+      "Rap & Hip-Hop (East, West, Southern, Midwest)": 14000,
+      "Rock & Alternative (Classic, Hard Rock, Grunge)": 14000,
+      "R&B & Soul (Motown, Contemporary R&B, Neo-Soul)": 10000,
+      "Dance, EDM & Electronic (House, Techno, Trance)": 10000,
+      "Trap, Drill & Phonk (Modern Trap, Drift Phonk)": 7000,
+      "Indie & Alternative Pop": 7000,
+      "Country & Americana": 6000,
+      "Jazz, Blues, Funk & Disco": 5000,
+      "Metal & Punk (Heavy Metal, Punk Rock)": 4000,
+      "Acoustic & Singer-Songwriter": 3000,
+      "Soundtrack & Cinematic Popular Themes": 2000
+    },
+    "eras": {
+      "1950s–1960s": 18756,
+      "1970s": 12504,
+      "1980s": 12504,
+      "1990s": 12500,
+      "2000–2009": 12496,
+      "2010–2019": 12496,
+      "2020–present": 18744
+    },
+    "recordingTypes": {
+      "studio_original": 28579,
+      "remaster": 14288,
+      "acoustic": 14286,
+      "live": 14283,
+      "remix": 14282,
+      "radio_edit": 14282
+    },
+    "excludedPreviousPasses": 0
+  },
+  "hindi": {
+    "total": 100000,
+    "subgenres": {
+      "Bollywood Romantic (Golden Era to Modern)": 18000,
+      "Bollywood Classics & Golden Era (1950s–1980s)": 15000,
+      "Bollywood Dance & Party Hits": 14000,
+      "Bollywood Heartbreak & Emotional Ballads": 11000,
+      "Hindi Pop & Contemporary Independent Singles": 11000,
+      "Hindi Rap & Desi Hip-Hop (Gully, Trap, Drill)": 8000,
+      "Devotional & Spiritual (Bhajans, Aartis, Chants)": 7000,
+      "Ghazals & Sufi Music": 5000,
+      "Hindi Classical & Semi-Classical Instrumental Fusion": 4000,
+      "Hindi Acoustic, Unplugged & Stripped Sessions": 3000,
+      "Folk-Inspired Hindi Music": 2000,
+      "Hindi Electronic, Club & Festival Remixes": 2000
+    },
+    "eras": {
+      "1950s–1960s": 18763,
+      "1970s": 12503,
+      "1980s": 12504,
+      "1990s": 12501,
+      "2000–2009": 12498,
+      "2010–2019": 12496,
+      "2020–present": 18735
+    },
+    "recordingTypes": {
+      "studio_original": 28537,
+      "remaster": 14247,
+      "acoustic": 14243,
+      "live": 14245,
+      "remix": 14365,
+      "radio_edit": 14363
+    },
+    "excludedPreviousPasses": 870
+  }
+}
