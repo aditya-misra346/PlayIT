@@ -1,0 +1,14 @@
+# Exclude native mobile/desktop build trees and local toolchains from Vercel uploads
+android/
+ios/
+desktop/
+ci/
+docs/
+node_modules/
+**/node_modules/
+.git/
+*.log
+*.apk
+*.aab
+*.dmg
+*.zip

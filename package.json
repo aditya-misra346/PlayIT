@@ -1,6 +1,6 @@
 {
   "name": "auralis-monorepo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Auralis — Cross-Platform Acoustic Music Recognition Platform (Web, PWA, Android, iOS, macOS, Windows, Linux)",
   "scripts": {
