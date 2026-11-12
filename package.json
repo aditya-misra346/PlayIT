@@ -1,10 +1,11 @@
 {
   "name": "auralis-monorepo",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "description": "Auralis — Cross-Platform Acoustic Music Recognition Platform (Web, PWA, Android, iOS, macOS, Windows, Linux)",
   "scripts": {
+    "test": "npm run test:server",
     "dev:server": "npm --prefix server run dev",
     "dev:web": "npm --prefix web run dev",
     "build:server": "npm --prefix server run build",

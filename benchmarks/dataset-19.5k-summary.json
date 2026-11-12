@@ -1,0 +1,127 @@
+{
+  "totalSongs": 19500,
+  "generatedAt": "2026-11-12T12:41:45.017Z",
+  "categories": {
+    "Hindi": {
+      "total": 10000,
+      "target": 10000,
+      "language": "Hindi",
+      "script": "Devanagari + Romanized",
+      "region": "India",
+      "subgenres": {
+        "Bollywood Romantic": 1500,
+        "Bollywood Dance & Party": 1200,
+        "Bollywood Classics (Golden Eras)": 1500,
+        "Bollywood Heartbreak & Sad Songs": 1000,
+        "Devotional & Spiritual (Bhajans, Aartis)": 700,
+        "Hindi Instrumental & Classical-Inspired": 600,
+        "Hindi Pop & Independent Music": 1000,
+        "Hindi Acoustic & Unplugged": 500,
+        "Hindi Rap & Desi Hip-Hop": 800,
+        "Hindi Electronic & Club Remixes": 500,
+        "Ghazals & Sufi Music": 500,
+        "Folk-Inspired Hindi Songs": 200
+      }
+    },
+    "Phonk": {
+      "total": 500,
+      "target": 500,
+      "language": "Instrumental / English Samples",
+      "script": "Latin",
+      "region": "Global / Memphis",
+      "subgenres": {
+        "Drift Phonk": 150,
+        "Brazilian Phonk": 100,
+        "Classic Phonk": 60,
+        "Memphis-Inspired Phonk": 50,
+        "Aggressive / Hard Phonk": 50,
+        "Atmospheric / Ambient Phonk": 30,
+        "Cowbell-Heavy Phonk": 30,
+        "Instrumental Phonk": 15,
+        "Vocal Sample-Heavy Phonk": 15
+      }
+    },
+    "Brazilian": {
+      "total": 2000,
+      "target": 2000,
+      "language": "Portuguese",
+      "script": "Portuguese Diacritics",
+      "region": "Brazil",
+      "subgenres": {
+        "Funk Carioca & Mandelão": 500,
+        "Sertanejo & Sertanejo Universitário": 400,
+        "Brazilian Pop": 300,
+        "Brazilian Hip-Hop / Rap / Trap Nacional": 250,
+        "Bossa Nova Classics": 150,
+        "Samba & Pagode": 200,
+        "MPB (Música Popular Brasileira)": 100,
+        "Brazilian Electronic / Tech House": 50,
+        "Brazilian Rock & Indie": 50
+      }
+    },
+    "Spanish": {
+      "total": 2000,
+      "target": 2000,
+      "language": "Spanish",
+      "script": "Spanish Accented",
+      "region": "Latin America & Spain",
+      "subgenres": {
+        "Reggaeton": 600,
+        "Latin Pop": 400,
+        "Latin Trap": 300,
+        "Spanish Rap & Hip-Hop": 200,
+        "Regional Mexican & Corridos Tumbados": 250,
+        "Bachata, Salsa & Merengue": 150,
+        "Spanish Rock & Indie": 100
+      }
+    },
+    "English Rap": {
+      "total": 5000,
+      "target": 5000,
+      "language": "English",
+      "script": "Latin",
+      "region": "US & UK",
+      "subgenres": {
+        "Mainstream Modern Rap": 1200,
+        "Old-School Hip-Hop (Golden Eras)": 1000,
+        "Trap Music": 900,
+        "Drill Music (UK, Brooklyn, Chicago)": 500,
+        "Conscious & Lyrical Hip-Hop": 500,
+        "Gangsta Rap": 400,
+        "Melodic & Cloud Rap": 300,
+        "Alternative Hip-Hop": 200
+      }
+    }
+  },
+  "recordingTypes": {
+    "studio_original": 5616,
+    "live": 2775,
+    "remix": 2772,
+    "radio_edit": 2766,
+    "remaster": 2791,
+    "acoustic": 2780
+  },
+  "eras": {
+    "2020–present": 3608,
+    "2010–2019": 2421,
+    "2000–2009": 2426,
+    "1970s": 2457,
+    "1980s": 2447,
+    "1990s": 2435,
+    "1950s–1960s": 3706
+  },
+  "scripts": {
+    "Devanagari + Romanized": 10000,
+    "Latin": 5500,
+    "Portuguese Diacritics": 2000,
+    "Spanish Accented": 2000
+  },
+  "regions": {
+    "India": 10000,
+    "Global / Memphis": 500,
+    "Brazil": 2000,
+    "Latin America & Spain": 2000,
+    "US & UK": 5000
+  },
+  "inLocalCatalogCount": 10
+}

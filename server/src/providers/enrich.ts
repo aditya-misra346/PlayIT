@@ -3,22 +3,24 @@ import { link, safeMediaUrl, str } from './normalize.js';
 
 function norm(s: string): string {
   return s
+    .normalize('NFC')
     .toLowerCase()
     .replace(/\(.*?\)|\[.*?\]/g, '')
-    .replace(/\s+-\s+.*?(versión|version|remix|edit|live|remaster).*$/i, '')
-    .replace(/[^a-z0-9\u00c0-\u024f\u0900-\u097f]+/g, ' ')
+    .replace(/\s+-\s+.*?(versión|versão|version|remix|edit|live|ao vivo|en vivo|remaster).*$/i, '')
+    .replace(/[^\p{L}\p{N}\s]+/gu, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
 function isVariantOrRemixTitle(title: string): boolean {
-  return /\b(remix|versión|version|club edit|radio edit|latin remix|notd remix|on vacation version|lofi|flip)\b/i.test(title);
+  return /\b(remix|versión|versão|versao|version|club edit|radio edit|latin remix|notd remix|on vacation version|lofi|flip|ao vivo|en vivo|acústico|acustico|mandelão|mandelaum)\b/i.test(title);
 }
 
 function cleanCanonicalTitle(title: string): string {
   return title
-    .replace(/\(.*?(remix|versión|version|edit|feat\.).*?\)/gi, '')
-    .replace(/\[.*?(remix|versión|version|edit|feat\.).*?\]/gi, '')
-    .replace(/\s+-\s+.*?(versión|version|remix|edit).*$/i, '')
+    .replace(/\(.*?(remix|versión|versão|version|edit|feat\.|ao vivo|en vivo|acústico).*?\)/gi, '')
+    .replace(/\[.*?(remix|versión|versão|version|edit|feat\.|ao vivo|en vivo|acústico).*?\]/gi, '')
+    .replace(/\s+-\s+.*?(versión|versão|version|remix|edit|ao vivo|en vivo).*$/i, '')
     .trim();
 }
 
