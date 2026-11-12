@@ -5,7 +5,7 @@
   "releaseDate": "2026-11-12",
   "channel": "production",
   "minCompatibleVersion": "1.0.0",
-  "officialUrl": "https://playit.vercel.app/",
+  "officialUrl": "https://playit-music.vercel.app/",
   "productionUrl": "https://auralis-eight-kohl.vercel.app",
   "notes": "PlayIT Cross-Platform Download Centre & Zero-Cost Distribution release. Features instant device detection, direct Android APK download, native macOS Universal DMG installer, Windows installer, Linux AppImage, and zero-install iOS/Desktop Progressive Web App with seamless automatic background updates.",
   "platforms": {
@@ -65,7 +65,7 @@
       "version": "1.5.0",
       "buildNumber": 8,
       "format": "Progressive Web App (PWA)",
-      "webUrl": "https://playit.vercel.app/",
+      "webUrl": "https://playit-music.vercel.app/",
       "sizeDisplay": "Instant (~1.2 MB cached)",
       "minOs": "iOS 16.0 / iPadOS 16.0+",
       "badge": "No App Store Account or Apple ID Required",

@@ -40,7 +40,7 @@ async function verifyEndpoints(baseUrl, expectedVersion) {
   assert.equal(htmlRes.status, 200, 'Expected HTTP 200 on /');
   const html = await htmlRes.text();
   assert.ok(html.includes('PlayIT'), 'Expected PlayIT title in index.html');
-  assert.ok(html.includes('property="og:image" content="https://playit.vercel.app/og-image.png"'), 'Expected official og-image in index.html');
+  assert.ok(html.includes('property="og:image" content="https://playit-music.vercel.app/og-image.png"'), 'Expected official og-image in index.html');
   assert.ok(html.includes('name="twitter:card" content="summary_large_image"'), 'Expected summary_large_image Twitter card');
   assert.ok(html.includes('property="og:title" content="PlayIT — Discover Music Instantly"'), 'Expected PlayIT Open Graph title');
 

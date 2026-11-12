@@ -2,7 +2,7 @@
 
 **PlayIT** is a cross-platform acoustic music recognition platform spanning **Web (Desktop & Mobile Browsers + Installable PWA)**, **Android (Kotlin + Jetpack Compose)**, **iOS & iPadOS (SwiftUI + ShazamKit)**, and **Desktop (macOS, Windows, Linux via Tauri 2 + Rust + native system-audio capture)**.
 
-- **Official Website:** [https://playit.vercel.app/](https://playit.vercel.app/) *(Live Production Deployment: https://auralis-eight-kohl.vercel.app)*
+- **Official Website:** [https://playit-music.vercel.app/](https://playit-music.vercel.app/) *(Live Production Deployment: https://auralis-eight-kohl.vercel.app)*
 - **GitHub Repository:** [https://github.com/aditya-misra346/PlayIT](https://github.com/aditya-misra346/PlayIT)
 
 ---

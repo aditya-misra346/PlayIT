@@ -4,7 +4,7 @@ PlayIT is an original music-recognition product. Do NOT use Shazam branding, log
 
 ## Brand
 - Name: **PlayIT** — tagline "Hear it. Know it."
-- Official Website: `https://playit.vercel.app/`
+- Official Website: `https://playit-music.vercel.app/`
 - Dark-only. Colors: midnight `#060A14` (bg), deep `#0B1220` (surface), charcoal `#121A2B` (elevated),
   line `#1E2A40`, text `#EAF2FF`, muted `#8A9BB8`, electric blue `#2F6BFF`, cyan `#22D3EE`, teal `#14B8A6`,
   danger `#FF5A6E`, warn `#FFB547`. Signature gradient: `linear(135deg, #2F6BFF → #22D3EE → #14B8A6)`.

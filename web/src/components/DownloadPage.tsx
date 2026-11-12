@@ -251,7 +251,7 @@ export const DownloadPage: React.FC<DownloadPageProps> = ({ onBackToApp, initial
           </h3>
           {selectedPlatform === 'ios' ? (
             <ol className="guide-steps-list">
-              <li>Open <strong>https://playit.vercel.app</strong> in Safari on your iPhone or iPad.</li>
+              <li>Open <strong>https://playit-music.vercel.app</strong> in Safari on your iPhone or iPad.</li>
               <li>Tap the <strong>Share</strong> icon (the square with an arrow pointing upward) in Safari's bottom toolbar.</li>
               <li>Scroll down the share sheet and tap <strong>Add to Home Screen</strong>, then tap <strong>Add</strong> in the top-right corner.</li>
               <li>PlayIT will now appear as an icon on your home screen, launching in an app-like standalone window.</li>

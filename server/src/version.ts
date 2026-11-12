@@ -37,7 +37,7 @@ export const RELEASE_MANIFEST = {
     "version": "1.5.0",
     "buildNumber": 8,
     "format": "Progressive Web App (PWA)",
-    "webUrl": "https://playit.vercel.app/",
+    "webUrl": "https://playit-music.vercel.app/",
     "sizeDisplay": "Instant (~1.2 MB cached)",
     "minOs": "iOS 16.0 / iPadOS 16.0+",
     "badge": "No App Store Account or Apple ID Required",

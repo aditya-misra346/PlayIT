@@ -2,7 +2,7 @@
 
 **Version:** 1.5.0  
 **Design System:** PlayIT Sonic Prism Identity  
-**Primary URL:** https://playit.vercel.app/  
+**Primary URL:** https://playit-music.vercel.app/  
 **Repository:** https://github.com/aditya-misra346/PlayIT  
 **Creator Attribution:** Made by Aditya Misra
 
@@ -119,12 +119,12 @@ web/public/
   - Feature Pills: "Instant Acoustic Recognition · Cross-Platform · 100% Free".
   - Creator Tag: "Made by Aditya Misra".
 - **HTML Headers** (`web/index.html`):
-  - `og:image` and `og:image:secure_url`: `https://playit.vercel.app/og-image.png`
+  - `og:image` and `og:image:secure_url`: `https://playit-music.vercel.app/og-image.png`
   - `og:image:type`: `image/png`
   - `og:image:width`: `1200`
   - `og:image:height`: `630`
   - `twitter:card`: `summary_large_image`
-  - `twitter:image`: `https://playit.vercel.app/og-image.png`
+  - `twitter:image`: `https://playit-music.vercel.app/og-image.png`
 
 ---
 

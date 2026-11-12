@@ -269,7 +269,7 @@ export function createAuralisApp(cfg: AppConfig, fetchImpl: typeof fetch = fetch
           buildNumber: RELEASE_MANIFEST.buildNumber,
           releaseDate: RELEASE_MANIFEST.releaseDate,
           channel: RELEASE_MANIFEST.channel,
-          officialUrl: 'https://playit.vercel.app/',
+          officialUrl: 'https://playit-music.vercel.app/',
           notes: RELEASE_MANIFEST.notes,
           platforms: RELEASE_MANIFEST.platforms,
           downloads: (RELEASE_MANIFEST as any).downloads ?? {},
