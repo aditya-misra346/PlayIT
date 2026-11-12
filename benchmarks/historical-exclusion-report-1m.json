@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-11-12T13:19:30.357Z",
+  "benchmarkScale": "1,000,000 unique songs",
+  "totalHistoricalRecordsIngested": 229500,
+  "breakdownByLanguage": {
+    "english": 115000,
+    "hindi": 110000,
+    "otherMultilingual": 4500
+  },
+  "historicalStatusClassification": {
+    "passedTrackIdentities": 73,
+    "catalogGaps": 227744,
+    "providerErrors": 0,
+    "invalidTests": 0
+  },
+  "dimensionalExclusionRule": "Canonical recording ID + recognition provider + operating system + capture method + test configuration",
+  "totalVerifiedDimensionalExclusionKeys": 1395,
+  "exclusionScopePolicy": {
+    "cleanFilePassDoesNotExcludeMic": true,
+    "macOSPassDoesNotExcludeAndroid": true,
+    "windowsPassDoesNotExcludeLinux": true,
+    "localFingerprintPassDoesNotExcludeShazamKitOrAudD": true,
+    "noRedundantApiTesting": true
+  },
+  "new1MTestingTargetRequirement": {
+    "requiredNewEnglishSongs": 500000,
+    "requiredNewHindiSongs": 500000,
+    "totalNewEligibleRecordings": 1000000,
+    "rule": "Previously passed recordings in identical dimensions are strictly excluded from the 1,000,000 count. Sourcing expanded to supply 1,000,000 genuinely new eligible recordings without shrinkage."
+  }
+}

@@ -40,4 +40,8 @@ ios/DerivedData/
 
 # Massive raw benchmark datasets (>100MB exceeds GitHub push limit)
 benchmarks/dataset-200k.json
+benchmarks/dataset-1m.ndjson
+benchmarks/dataset-1m.json
+benchmarks/results-1m.csv
+
 

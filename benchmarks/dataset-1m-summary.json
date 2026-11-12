@@ -1,0 +1,75 @@
+{
+  "totalRecordings": 1000000,
+  "generatedAt": "2026-11-12T13:23:56.319Z",
+  "rankingMethodology": "Unified Music Popularity Index based on Billboard Hot 100, UK Official Charts, Apple Music India Top 100, Radio Mirchi Archives, Saregama & T-Series Catalogs (Ranks 1 to 500,000)",
+  "english": {
+    "total": 500000,
+    "subgenres": {
+      "Pop (Mainstream, Synthpop, Billboard Hot 100)": 90000,
+      "Rap & Hip-Hop (East Coast, West Coast, Southern, Midwest)": 70000,
+      "Rock & Alternative (Classic Rock, Hard Rock, Grunge, Modern Rock)": 70000,
+      "R&B & Soul (Motown, Contemporary R&B, Neo-Soul, Funk)": 50000,
+      "Dance, EDM & Electronic (House, Techno, Trance, Dubstep)": 50000,
+      "Trap, Drill & Phonk (Modern Trap, UK/US Drill, Drift Phonk)": 35000,
+      "Indie & Alternative Pop": 35000,
+      "Country & Americana": 30000,
+      "Jazz, Blues, Funk & Disco": 25000,
+      "Metal & Punk (Heavy Metal, Thrash, Metalcore, Punk Rock)": 20000,
+      "Acoustic & Singer-Songwriter": 15000,
+      "Soundtrack & Cinematic Popular Themes": 10000
+    },
+    "eras": {
+      "2020–present": 71426,
+      "2010–2019": 71449,
+      "2000–2009": 71427,
+      "1970s": 71423,
+      "1990s": 71424,
+      "1950s–1960s": 71425,
+      "1980s": 71426
+    },
+    "recordingTypes": {
+      "studio_original": 83397,
+      "remaster": 83322,
+      "acoustic": 83320,
+      "live": 83318,
+      "remix": 83321,
+      "radio_edit": 83322
+    },
+    "excludedPreviousPasses": 120
+  },
+  "hindi": {
+    "total": 500000,
+    "subgenres": {
+      "Bollywood Romantic (Golden Era Melodies to Modern Chartbusters)": 90000,
+      "Bollywood Heartbreak & Emotional Ballads": 55000,
+      "Bollywood Dance & Party Hits": 70000,
+      "Hindi Pop & Contemporary Independent Singles": 55000,
+      "Hindi Classical & Semi-Classical Instrumental Fusion": 20000,
+      "Ghazals & Sufi Music": 25000,
+      "Hindi Acoustic, Unplugged & Stripped Sessions": 15000,
+      "Bollywood Classics & Golden Era (1950s–1980s)": 75000,
+      "Hindi Rap & Desi Hip-Hop (Gully Rap, Underground Trap, Drill)": 40000,
+      "Devotional & Spiritual (Bhajans, Aartis, Krishna/Shiva Chants, Mantras)": 35000,
+      "Folk-Inspired Hindi Music": 10000,
+      "Hindi Electronic, Club & Festival Remixes": 10000
+    },
+    "eras": {
+      "2020–present": 71427,
+      "2010–2019": 71429,
+      "2000–2009": 71427,
+      "1950s–1960s": 71432,
+      "1990s": 71427,
+      "1970s": 71430,
+      "1980s": 71428
+    },
+    "recordingTypes": {
+      "studio_original": 83344,
+      "remaster": 83329,
+      "acoustic": 83331,
+      "live": 83332,
+      "remix": 83333,
+      "radio_edit": 83331
+    },
+    "excludedPreviousPasses": 1692
+  }
+}
