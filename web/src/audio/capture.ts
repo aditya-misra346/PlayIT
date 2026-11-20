@@ -1,46 +1,7 @@
 import type { AudioInputDevice, AudioMetrics, DesktopCapabilities } from '../types';
 import { dbToNormalizedLevel, preprocessAndEncodeWav, TARGET_SAMPLE_RATE, toDb } from './dsp';
 
-declare global {
-  interface Window {
-    __TAURI_INTERNALS__?: {
-      invoke: (cmd: string, args?: Record<string, unknown>) => Promise<any>;
-    };
-  }
-}
-
-export function isTauriDesktop(): boolean {
-  return typeof window !== 'undefined' && Boolean(window.__TAURI_INTERNALS__?.invoke);
-}
-
-async function tauriInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
-  if (!window.__TAURI_INTERNALS__?.invoke) {
-    throw new Error('Tauri desktop runtime is not available');
-  }
-  return window.__TAURI_INTERNALS__.invoke(cmd, args);
-}
-
 export async function getPlatformAudioCapabilities(): Promise<DesktopCapabilities> {
-  if (isTauriDesktop()) {
-    try {
-      const caps = await tauriInvoke<{
-        microphone: boolean;
-        system: { supported: boolean; method: string; reason: string | null };
-      }>('audio_capabilities');
-      return {
-        isDesktopApp: true,
-        microphone: caps.microphone,
-        system: caps.system,
-      };
-    } catch (e) {
-      return {
-        isDesktopApp: true,
-        microphone: true,
-        system: { supported: false, method: 'none', reason: String(e) },
-      };
-    }
-  }
-
   const hasGetUserMedia = Boolean(navigator.mediaDevices?.getUserMedia);
   const hasDisplayMedia = Boolean(navigator.mediaDevices?.getDisplayMedia);
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -52,22 +13,15 @@ export async function getPlatformAudioCapabilities(): Promise<DesktopCapabilitie
       supported: hasDisplayMedia && !isMobile,
       method: hasDisplayMedia && !isMobile ? 'browser-display-audio' : 'none',
       reason: isMobile
-        ? 'Mobile browsers do not expose internal system audio capture. Use microphone mode or the native Android/Desktop app.'
+        ? 'Mobile browsers do not expose internal system audio capture. Use microphone mode.'
         : hasDisplayMedia
           ? null
-          : 'This browser does not support tab/system audio sharing. Use microphone mode or the PlayIT desktop app.',
+          : 'This browser does not support tab/system audio sharing. Use microphone mode.',
     },
   };
 }
 
 export async function listAudioInputDevices(): Promise<AudioInputDevice[]> {
-  if (isTauriDesktop()) {
-    try {
-      return await tauriInvoke<AudioInputDevice[]>('list_audio_inputs');
-    } catch {
-      // Fallback to browser enumeration if Tauri command fails
-    }
-  }
   if (!navigator.mediaDevices?.enumerateDevices) return [];
   try {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -104,7 +58,7 @@ export interface ActiveCaptureHandle {
 }
 
 /**
- * Starts an audio capture session (either via Tauri native backend or Browser Web Audio API).
+ * Starts an audio capture session via the Browser Web Audio API.
  * Automatically finishes when `targetSeconds` is reached, or earlier if `stop()` / `cancel()` is called.
  */
 export async function startAudioCaptureSession(opts: {
@@ -115,75 +69,7 @@ export async function startAudioCaptureSession(opts: {
   onComplete: (result: CaptureSessionResult) => void;
   onError: (code: 'permission_denied' | 'device_lost' | 'unsupported', message: string) => void;
 }): Promise<ActiveCaptureHandle> {
-  if (isTauriDesktop()) {
-    return startTauriNativeCapture(opts);
-  }
   return startBrowserWebAudioCapture(opts);
-}
-
-async function startTauriNativeCapture(opts: {
-  mode: 'microphone' | 'system';
-  deviceId: string | null;
-  targetSeconds: number;
-  onLevel: (update: LiveLevelUpdate) => void;
-  onComplete: (result: CaptureSessionResult) => void;
-  onError: (code: 'permission_denied' | 'device_lost' | 'unsupported', message: string) => void;
-}): Promise<ActiveCaptureHandle> {
-  const startMs = Date.now();
-  let stopped = false;
-
-  await tauriInvoke('start_capture', {
-    args: {
-      deviceId: opts.deviceId,
-      mode: opts.mode,
-      maxSeconds: opts.targetSeconds,
-    },
-  });
-
-  const pollTimer = window.setInterval(() => {
-    if (stopped) return;
-    const elapsedMs = Date.now() - startMs;
-    if (elapsedMs >= opts.targetSeconds * 1000) {
-      void finish(false);
-    }
-  }, 150);
-
-  async function finish(cancel: boolean): Promise<CaptureSessionResult> {
-    if (stopped) {
-      return {
-        wavBytes: new Uint8Array(0),
-        metrics: { rmsDbfs: -120, peak: 0, clippingRatio: 0, silenceRatio: 1, durationMs: 0 },
-        cancelled: true,
-      };
-    }
-    stopped = true;
-    window.clearInterval(pollTimer);
-    const res = await tauriInvoke<{
-      wavBase64: string;
-      durationMs: number;
-      sampleRate: number;
-      metrics: { rmsDbfs: number; peak: number; clippingRatio: number; silenceRatio: number };
-    }>('stop_capture', { args: { cancel } });
-
-    const binary = cancel || !res.wavBase64 ? '' : atob(res.wavBase64);
-    const wavBytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) wavBytes[i] = binary.charCodeAt(i);
-
-    const out: CaptureSessionResult = {
-      wavBytes,
-      metrics: { ...res.metrics, durationMs: res.durationMs },
-      cancelled: cancel,
-    };
-    if (!cancel) opts.onComplete(out);
-    return out;
-  }
-
-  return {
-    stop: () => finish(false),
-    cancel: async () => {
-      await finish(true);
-    },
-  };
 }
 
 async function startBrowserWebAudioCapture(opts: {

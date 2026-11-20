@@ -49,9 +49,8 @@ import type {
 } from './types';
 import { APP_BUILD_NUMBER, APP_VERSION, SUPPORTED_PLATFORMS } from './version';
 import { CreatorFooter } from './components/CreatorFooter';
-import { DownloadPage } from './components/DownloadPage';
 
-type ActiveTab = 'listen' | 'library' | 'studio' | 'settings' | 'download';
+type ActiveTab = 'listen' | 'library' | 'studio' | 'settings';
 type DateFilter = 'all' | 'today' | '7d' | '30d';
 type TestCondition = 'clean' | 'speaker' | 'noisy' | 'echo' | 'quiet';
 
@@ -114,13 +113,6 @@ const STATE_LABELS: Record<RecognitionState, { badge: string; title: string; sub
 };
 
 function getInitialTab(): ActiveTab {
-  if (typeof window !== 'undefined') {
-    const path = window.location.pathname.toLowerCase();
-    const search = window.location.search.toLowerCase();
-    if (path.includes('download') || search.includes('download')) {
-      return 'download';
-    }
-  }
   return 'listen';
 }
 
@@ -129,27 +121,6 @@ export function App() {
 
   const navigateToTab = useCallback((tab: ActiveTab) => {
     setActiveTab(tab);
-    if (typeof window !== 'undefined' && window.history) {
-      if (tab === 'download') {
-        window.history.pushState(null, '', '/download');
-      } else if (window.location.pathname.includes('download')) {
-        window.history.pushState(null, '', '/');
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const onPopState = () => {
-      const path = window.location.pathname.toLowerCase();
-      const search = window.location.search.toLowerCase();
-      if (path.includes('download') || search.includes('download')) {
-        setActiveTab('download');
-      } else {
-        setActiveTab('listen');
-      }
-    };
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
   }, []);
   const [state, setState] = useState<RecognitionState>('idle');
   const [statusDetail, setStatusDetail] = useState<string | null>(null);
@@ -723,18 +694,10 @@ export function App() {
           >
             Settings & Privacy
           </button>
-          <button
-            type="button"
-            className={`nav-pill download-pill ${activeTab === 'download' ? 'active' : ''}`}
-            onClick={() => navigateToTab('download')}
-          >
-            <span style={{ marginRight: '4px' }}>⬇</span>
-            Download App
-          </button>
         </nav>
 
         <div className="status-cluster">
-          <span className="provider-pill" title="Synchronized across Web, Android, iOS, macOS, Windows, and Linux">
+          <span className="provider-pill" title="PlayIT Web Application">
             v{APP_VERSION} · Build #{APP_BUILD_NUMBER}
           </span>
           <span className="provider-pill" title="Active recognition engine">
@@ -766,23 +729,6 @@ export function App() {
         <div className="workspace-grid">
           <main>
             <section className="listen-stage" aria-live="polite">
-              {/* Native App Download Banner in Hero */}
-              <div className="download-cta-banner">
-                <div className="download-cta-left">
-                  <span className="download-cta-tag">NATIVE APPS</span>
-                  <span className="download-cta-text">
-                    Get PlayIT on <strong>Android, iOS, Windows, macOS & Linux</strong>
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  className="download-cta-btn"
-                  onClick={() => navigateToTab('download')}
-                >
-                  Download Free App ↓
-                </button>
-              </div>
-
               <div className={`stage-status-chip ${isListening ? 'recording' : ''}`}>
                 <span
                   className="dot-live"
@@ -1639,7 +1585,7 @@ export function App() {
             </ul>
 
             <h2 style={{ fontSize: '0.98rem', fontWeight: 700, marginBottom: '10px' }}>
-              Synchronized Cross-Platform Builds (v{APP_VERSION} · Build #{APP_BUILD_NUMBER})
+              Platform Build (v{APP_VERSION} · Build #{APP_BUILD_NUMBER})
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '8px' }}>
               {SUPPORTED_PLATFORMS.map((plat) => (
@@ -1660,7 +1606,7 @@ export function App() {
                     <div style={{ fontSize: '0.84rem', fontWeight: 700 }}>{plat.name}</div>
                     <div style={{ fontSize: '0.73rem', color: 'var(--text-muted)' }}>Release {plat.version}</div>
                   </div>
-                  <span className="meta-chip accent">SYNCED</span>
+                  <span className="meta-chip accent">ACTIVE</span>
                 </div>
               ))}
             </div>
@@ -1671,7 +1617,7 @@ export function App() {
               Cloud Library Synchronization
             </h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '16px' }}>
-              Your recognition history works locally without an account. Sign in to synchronize your discoveries across Web, Android, iOS, and Desktop.
+              Your recognition history works locally without an account. Sign in to synchronize your discoveries in the cloud.
             </p>
 
             {authUser ? (
@@ -1762,13 +1708,8 @@ export function App() {
         </div>
       )}
 
-      {/* TAB 5: DOWNLOAD CENTER */}
-      {activeTab === 'download' && (
-        <DownloadPage onBackToApp={() => navigateToTab('listen')} />
-      )}
-
       {/* Global Creator Attribution Footer */}
-      <CreatorFooter onNavigateDownload={() => navigateToTab('download')} />
+      <CreatorFooter />
 
       {/* Mobile Bottom Navigation */}
       <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
@@ -1799,13 +1740,6 @@ export function App() {
           onClick={() => navigateToTab('settings')}
         >
           Privacy
-        </button>
-        <button
-          type="button"
-          className={`nav-pill ${activeTab === 'download' ? 'active' : ''}`}
-          onClick={() => navigateToTab('download')}
-        >
-          Download
         </button>
       </nav>
 

@@ -1,5 +1,4 @@
 import type { AudioMetrics, CaptureSource, LibraryItem, ProviderId, ReferenceTrack, ServerConfig, TrackMatch } from '../types';
-import { isTauriDesktop } from '../audio/capture';
 import { getApiBaseUrl, getAuthToken, getInstallId } from './storage';
 
 export class ClientApiError extends Error {
@@ -14,7 +13,7 @@ export class ClientApiError extends Error {
 }
 
 function buildHeaders(extra?: Record<string, string>): Record<string, string> {
-  const platform = isTauriDesktop() ? 'desktop/1.0' : 'web/1.0';
+  const platform = 'web/1.0';
   const installId = getInstallId();
   const headers: Record<string, string> = {
     'X-PlayIT-Client': platform,
